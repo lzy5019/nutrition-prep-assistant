@@ -512,6 +512,94 @@
       box-shadow: 0 10px 22px rgba(29, 43, 34, 0.08);
     }
 
+    .card-meta {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .meta-group {
+      display: grid;
+      gap: 5px;
+    }
+
+    .meta-title {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: #f2efe7;
+      color: #75583a;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .meta-chip.food { background: var(--mint); color: var(--green); }
+    .meta-chip.scene { background: #e6eff8; color: var(--blue); }
+    .meta-chip.method { background: #faefe5; color: #98632b; }
+    .meta-chip.empty { background: #f3f4ef; color: var(--muted); }
+
+    .rating-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .rating-pill {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 54px auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--rating-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .rating-meter {
+      display: block;
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(86, 96, 88, 0.16);
+    }
+
+    .rating-meter span {
+      display: block;
+      width: calc(var(--level) * 20%);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--rating-color);
+    }
+
+    .rating-pill b {
+      min-width: 1.2em;
+      color: var(--rating-color);
+      font-size: 13px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
     .shopping-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -521,6 +609,258 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       padding: 18px;
+    }
+
+    .filter-panel {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .filter-section {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .filter-section h3 {
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .filter-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .filter-tags {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .filter-group-card {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+    }
+
+    .filter-group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .filter-group-note {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .filter-children {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .filter-tag.parent {
+      background: var(--mint);
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .filter-tag.child {
+      min-height: 30px;
+      padding: 5px 8px;
+      font-size: 13px;
+    }
+
+    .filter-tag input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+    }
+
+    .range-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .range-filter {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+    }
+
+    .range-filter label {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .range-control {
+      display: grid;
+      gap: 10px;
+    }
+
+    .range-slider {
+      position: relative;
+      height: 34px;
+      --min-pos: 0%;
+      --max-pos: 100%;
+    }
+
+    .range-track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 8px;
+      border-radius: 999px;
+      transform: translateY(-50%);
+      background:
+        linear-gradient(90deg,
+          #dde4da 0%,
+          #dde4da var(--min-pos),
+          var(--green) var(--min-pos),
+          var(--green) var(--max-pos),
+          #dde4da var(--max-pos),
+          #dde4da 100%);
+    }
+
+    .range-slider input[type="range"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 34px;
+      margin: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .range-slider input[data-range-end="min"] { z-index: 2; }
+    .range-slider input[data-range-end="max"] { z-index: 3; }
+    .range-slider input[type="range"]:focus { z-index: 4; }
+
+    .range-slider input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: transparent;
+    }
+
+    .range-slider input[type="range"]::-moz-range-track {
+      height: 8px;
+      background: transparent;
+    }
+
+    .range-slider input[type="range"]::-webkit-slider-thumb {
+      width: 22px;
+      height: 22px;
+      margin-top: -7px;
+      border: 3px solid var(--surface);
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 2px 7px rgba(31, 53, 42, 0.25);
+      cursor: grab;
+      pointer-events: auto;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .range-slider input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border: 3px solid var(--surface);
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 2px 7px rgba(31, 53, 42, 0.25);
+      cursor: grab;
+      pointer-events: auto;
+    }
+
+    .range-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+      outline: 3px solid rgba(33, 102, 78, 0.25);
+    }
+
+    .range-values {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .range-values b {
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .range-examples {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .range-example {
+      min-height: 54px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--rating-soft);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .range-example b {
+      display: block;
+      color: var(--rating-color);
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .secondary-btn {
+      min-height: 40px;
+      padding: 0 14px;
+      font-weight: 800;
     }
 
     .field {
@@ -581,6 +921,22 @@
 
       .library-controls {
         grid-template-columns: 1fr;
+      }
+
+      .range-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-tags {
+        grid-template-columns: 1fr;
+      }
+
+      .range-examples {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .meal-card { min-height: auto; }
@@ -683,21 +1039,35 @@
             <label for="cycleStart">第 1 天日期</label>
             <input class="date-input" id="cycleStart" type="date">
           </div>
-          <div class="field">
-            <label for="goalText">当前目标</label>
-            <input class="date-input" id="goalText" type="text">
-          </div>
-          <div class="field">
-            <label for="avoidText">忌口/不耐受</label>
-            <textarea id="avoidText"></textarea>
-          </div>
-          <div class="field">
-            <label for="modeText">可用场景</label>
-            <textarea id="modeText"></textarea>
+        </div>
+        <div class="filter-panel">
+          <section class="filter-section">
+            <h3>食材奖池</h3>
+            <p class="filter-note">取消勾选后，含有该食材标签的菜不会被抽到；菜单库也会同步过滤。</p>
+            <div class="filter-tags" id="ingredientFilters"></div>
+          </section>
+          <section class="filter-section">
+            <h3>场景</h3>
+            <p class="filter-note">只保留适合这些场景的菜。全部取消时等于不限制。</p>
+            <div class="filter-tags" id="sceneFilters"></div>
+          </section>
+          <section class="filter-section">
+            <h3>做法</h3>
+            <p class="filter-note">按烹饪方式过滤，比如免开火、蒸煮、清汤、轻食、快炒。</p>
+            <div class="filter-tags" id="methodFilters"></div>
+          </section>
+          <section class="filter-section">
+            <h3>区间筛选</h3>
+            <p class="filter-note">等级 1 最低、5 最高。抽奖只会从所有条件同时满足的菜里选择。</p>
+            <div class="range-grid" id="rangeFilters"></div>
+          </section>
+          <div class="filter-actions">
+            <button class="secondary-btn" id="selectAllFilters" type="button">全选标签</button>
+            <button class="secondary-btn" id="resetFilters" type="button">恢复默认</button>
           </div>
         </div>
       </section>
-      <p class="footer-note">数据保存在当前浏览器本地。默认避开香菇、重油、重辣；如果出现皮肤、胃肠或呼吸道不适，先停用可疑食物并记录。</p>
+      <p class="footer-note">数据保存在当前浏览器本地。默认不勾选香菇/菌菇、油炸重油、辛辣；如果筛选太严导致某一餐无可选菜，放宽对应标签或区间。</p>
     </section>
   </main>
 
@@ -719,9 +1089,7 @@
     const DAY = 24 * 60 * 60 * 1000;
     const initialSettings = {
       cycleStart: "2026-06-24",
-      goal: "规律三餐、少油少辣、优先高蛋白和足量蔬菜",
-      avoid: "香菇及含香菇菜品；明显重油、油炸、干锅、香锅、油泼；强辣；任何曾引发皮肤、胃肠或呼吸道不适的食物",
-      mode: "食堂、便利店、外卖轻食、宿舍微波/电饭锅、普通家常菜"
+      filters: null
     };
 
     const plans = [
@@ -1006,7 +1374,12 @@
         ["豆浆红薯水果盒", "无糖豆浆 350ml + 红薯 220g + 猕猴桃 1 个 + 鸡蛋 1 个", [["无糖豆浆", "350ml"], ["红薯", "220g"], ["猕猴桃", "1 个"]], ["便利店", "免开火"], 500, 24, "猕猴桃刺激胃时换苹果或梨。"],
         ["番茄牛肉早餐汤", "瘦牛肉 90g + 番茄 1 个 + 青菜 200g + 米饭 80g", [["瘦牛肉", "90g"], ["番茄", "1 个"], ["青菜", "200g"]], ["家常", "热早餐"], 520, 32, "早上没时间可把牛肉提前煮熟冷藏。"],
         ["低糖奶酪吐司盘", "全麦吐司 2 片 + 低脂奶酪 1 片 + 鸡蛋 1 个 + 番茄黄瓜", [["全麦吐司", "2 片"], ["低脂奶酪", "1 片"], ["番茄黄瓜", "合计 250g"]], ["便利店", "免开火"], 500, 26, "奶酪选低脂低盐；不耐受乳制品就换鸡胸。"],
-        ["玉米豆腐鸡蛋碗", "玉米 1 根 + 内酯豆腐 150g + 鸡蛋 1 个 + 小番茄 150g", [["玉米", "1 根"], ["内酯豆腐", "150g"], ["小番茄", "150g"]], ["便利店", "宿舍"], 490, 25, "内酯豆腐调味少放酱油，不加辣油。"]
+        ["玉米豆腐鸡蛋碗", "玉米 1 根 + 内酯豆腐 150g + 鸡蛋 1 个 + 小番茄 150g", [["玉米", "1 根"], ["内酯豆腐", "150g"], ["小番茄", "150g"]], ["便利店", "宿舍"], 490, 25, "内酯豆腐调味少放酱油，不加辣油。"],
+        ["芝士火腿蛋吐司", "全麦吐司 2 片 + 鸡蛋 1 个 + 火腿 1 片 + 芝士片 1 片 + 番茄", [["全麦吐司", "2 片"], ["鸡蛋", "1 个"], ["火腿和芝士片", "各 1 片"]], ["便利店", "热早餐"], 620, 28, "火腿和芝士偏咸，搭配番茄或生菜；想清淡就把火腿换鸡胸。"],
+        ["香蕉花生酱贝果", "贝果 1 个 + 香蕉 1 根 + 花生酱 15g + 牛奶 250ml", [["贝果", "1 个"], ["香蕉", "1 根"], ["花生酱", "15g，薄薄一层"]], ["便利店", "免开火"], 680, 22, "甜度和热量偏高，适合活动量大的一天；花生不耐受就换酸奶。"],
+        ["奶茶鸡蛋早餐", "中杯奶茶半糖 + 茶叶蛋 2 个 + 全麦面包 1 个", [["奶茶", "中杯半糖，尽量少冰"], ["茶叶蛋", "2 个"], ["全麦面包", "1 个"]], ["便利店", "放纵餐"], 720, 24, "奶茶算含糖饮料，想稳一点就换无糖豆浆或美式咖啡。"],
+        ["煎饼果子轻量版", "煎饼果子 1 份少酱少脆 + 无糖豆浆 300ml", [["煎饼果子", "备注少酱，薄脆半份"], ["无糖豆浆", "300ml"]], ["早餐铺", "热早餐"], 650, 23, "酱和薄脆会增加咸度和油脂；加一个茶叶蛋可以提高蛋白。"],
+        ["甜甜圈酸奶组合", "甜甜圈 1 个 + 无糖酸奶 200g + 鸡蛋 1 个", [["甜甜圈", "1 个"], ["无糖酸奶", "200g"], ["鸡蛋", "1 个"]], ["便利店", "放纵餐"], 700, 20, "这是甜品早餐，适合偶尔满足；如果当天午晚餐尽量清淡。"]
       ],
       lunch: [
         ["清蒸鱼杂粮饭", "清蒸鱼 170g + 杂粮饭 150g + 西兰花 200g + 冬瓜汤", [["鱼肉", "170g，确认耐受"], ["杂粮饭", "熟重 150g"], ["西兰花", "200g"]], ["食堂", "家常"], 680, 45, "清蒸优先，避开红烧厚芡和辣油。"],
@@ -1044,7 +1417,13 @@
         ["鸡胸番茄鹰嘴豆饭", "鸡胸 140g + 鹰嘴豆 80g + 番茄 2 个 + 米饭 100g", [["鸡胸", "140g"], ["鹰嘴豆", "80g"], ["番茄", "2 个"]], ["家常", "轻食"], 680, 45, "鹰嘴豆不耐受就换豆腐。"],
         ["鳕鱼豆苗糙米饭", "鳕鱼 170g + 豆苗 250g + 糙米饭 150g", [["鳕鱼", "170g"], ["豆苗", "250g"], ["糙米饭", "150g"]], ["家常", "食堂"], 660, 42, "豆苗可换任意绿叶菜。"],
         ["瘦肉蒸蛋蔬菜饭", "瘦肉 100g + 蒸蛋 1 份 + 青菜 250g + 米饭 130g", [["瘦肉", "100g"], ["鸡蛋", "1-2 个做蒸蛋"], ["青菜", "250g"]], ["食堂", "家常"], 680, 40, "蒸蛋少酱油，肉菜少油。"],
-        ["鸡肉玉米番茄饭", "鸡肉 150g + 玉米半根 + 番茄 2 个 + 米饭 120g + 青菜", [["鸡肉", "150g"], ["玉米", "半根"], ["番茄和青菜", "350g"]], ["家常", "宿舍"], 670, 43, "番茄多放，油少放。"]
+        ["鸡肉玉米番茄饭", "鸡肉 150g + 玉米半根 + 番茄 2 个 + 米饭 120g + 青菜", [["鸡肉", "150g"], ["玉米", "半根"], ["番茄和青菜", "350g"]], ["家常", "宿舍"], 670, 43, "番茄多放，油少放。"],
+        ["双层牛肉芝士汉堡餐", "双层牛肉汉堡 1 个 + 薯条小份 + 无糖茶", [["牛肉汉堡", "1 个，尽量不要额外酱"], ["薯条", "小份"], ["无糖茶", "1 杯"]], ["外卖", "放纵餐"], 920, 39, "这是高热量高盐餐；如果想降低负担，把薯条换沙拉或玉米。"],
+        ["炸鸡腿饭", "炸鸡腿 1 个 + 米饭 120g + 生菜黄瓜番茄 250g", [["炸鸡腿", "1 个，去掉部分炸皮更轻"], ["米饭", "120g"], ["生菜黄瓜番茄", "250g"]], ["外卖", "放纵餐"], 850, 35, "炸鸡油脂较高，酱汁另放；当天晚餐建议清汤或豆腐蔬菜。"],
+        ["牛肉麻辣烫", "牛肉 120g + 豆腐 100g + 青菜 300g + 粉小份，汤不喝完", [["牛肉", "120g"], ["豆腐", "100g"], ["青菜", "300g"], ["粉", "小份"]], ["餐馆", "外卖"], 780, 42, "选清汤或微辣，少放丸子和油炸串，汤底不要喝完。"],
+        ["照烧鸡腿盖饭", "照烧鸡腿 150g + 米饭 150g + 西兰花 200g", [["鸡腿肉", "150g"], ["米饭", "150g"], ["西兰花", "200g"]], ["食堂", "外卖"], 760, 40, "照烧酱偏甜偏咸，酱汁半量；可以加一份青菜稀释口味。"],
+        ["金枪鱼芝士披萨", "薄底披萨 2-3 片 + 金枪鱼/鸡肉 + 生菜沙拉", [["披萨", "2-3 片"], ["金枪鱼或鸡肉", "优先选非油炸"], ["生菜沙拉", "1 份，少酱"]], ["餐馆", "放纵餐"], 880, 36, "披萨盐和脂肪偏高，适合偶尔吃；饮料选无糖。"],
+        ["酸菜牛肉米线", "牛肉 120g + 米线小份 + 酸菜少量 + 青菜 250g", [["牛肉", "120g"], ["米线", "小份"], ["酸菜和青菜", "酸菜少量，青菜多放"]], ["外卖", "热餐"], 720, 36, "酸菜偏咸，汤少喝；不舒服时换番茄汤底。"]
       ],
       dinner: [
         ["豆腐番茄鱼片汤", "豆腐 180g + 鱼片 150g + 番茄 2 个 + 青菜 250g", [["豆腐", "180g"], ["鱼片", "150g，确认耐受"], ["番茄和青菜", "400g"]], ["家常", "清淡晚餐"], 560, 39, "晚餐少主食，饿可加红薯 100g。"],
@@ -1083,7 +1462,13 @@
         ["牛肉鸡蛋生菜碗", "牛肉 100g + 鸡蛋 1 个 + 生菜番茄黄瓜 350g + 米饭 80g", [["牛肉", "100g"], ["鸡蛋", "1 个"], ["生菜番茄黄瓜", "350g"]], ["便利店", "轻食"], 590, 38, "饭量小一点，酱汁半量。"],
         ["鸡肉玉米豆腐汤", "鸡肉 110g + 豆腐 150g + 玉米半根 + 青菜 250g", [["鸡肉", "110g"], ["豆腐", "150g"], ["玉米和青菜", "半根 + 250g"]], ["家常", "清淡晚餐"], 580, 39, "玉米提供主食，汤不放辣。"],
         ["番茄牛肉藜麦碗", "牛肉 100g + 藜麦饭 90g + 番茄 2 个 + 生菜 250g", [["牛肉", "100g"], ["藜麦饭", "90g"], ["番茄生菜", "350g"]], ["轻食", "家常"], 590, 35, "藜麦可换糙米饭少量。"],
-        ["鸡蛋青菜豆腐饭", "鸡蛋 1 个 + 豆腐 200g + 青菜 300g + 米饭 80g", [["鸡蛋", "1 个"], ["豆腐", "200g"], ["青菜", "300g"]], ["食堂", "宿舍"], 560, 31, "偏素晚餐，运动后可加鸡胸 50g。"]
+        ["鸡蛋青菜豆腐饭", "鸡蛋 1 个 + 豆腐 200g + 青菜 300g + 米饭 80g", [["鸡蛋", "1 个"], ["豆腐", "200g"], ["青菜", "300g"]], ["食堂", "宿舍"], 560, 31, "偏素晚餐，运动后可加鸡胸 50g。"],
+        ["番茄牛肉小火锅", "牛肉 150g + 豆腐 150g + 青菜 400g + 粉小份，番茄锅底", [["牛肉", "150g"], ["豆腐", "150g"], ["青菜", "400g"], ["粉", "小份"]], ["餐馆", "热餐"], 760, 48, "火锅可选番茄或清汤，少蘸料，汤不要喝完；想放纵可加肥牛但健康度会下降。"],
+        ["韩式炸鸡分享餐", "炸鸡 4-5 块 + 生菜黄瓜 250g + 米饭 80g + 无糖茶", [["炸鸡", "4-5 块"], ["生菜黄瓜", "250g"], ["米饭", "80g"]], ["外卖", "放纵餐"], 950, 42, "甜辣酱另放，先吃蔬菜；这是高盐高油餐，适合偶尔。"],
+        ["肥牛泡菜拌饭", "肥牛 120g + 泡菜少量 + 米饭 150g + 生菜海苔 + 鸡蛋 1 个", [["肥牛", "120g"], ["泡菜", "少量"], ["米饭", "150g"], ["鸡蛋", "1 个"]], ["餐馆", "外卖"], 780, 36, "泡菜和拌饭酱偏咸，酱半量；加生菜可以提升饱腹。"],
+        ["奶油培根意面", "奶油培根意面小份 + 生菜沙拉 1 份", [["意面", "小份"], ["培根", "少量"], ["生菜沙拉", "1 份，油醋汁半量"]], ["餐馆", "放纵餐"], 900, 28, "奶油和培根让盐脂偏高；如果想稳一点，换番茄鸡肉意面。"],
+        ["烤肉生菜饭", "烤牛肉/鸡肉 160g + 生菜 300g + 米饭 100g + 泡菜少量", [["烤牛肉或鸡肉", "160g"], ["生菜", "300g"], ["米饭", "100g"], ["泡菜", "少量"]], ["餐馆", "热餐"], 800, 45, "用生菜包肉，少蘸酱；五花肉会明显提高油脂。"],
+        ["泡面加蛋豆腐", "泡面半包调料 + 鸡蛋 1 个 + 豆腐 150g + 青菜 200g", [["泡面", "1 包，调料半包"], ["鸡蛋", "1 个"], ["豆腐", "150g"], ["青菜", "200g"]], ["宿舍", "放纵餐"], 720, 30, "这是应急餐，调料半包、汤别喝完；能加青菜就加青菜。"]
       ]
     };
 
@@ -1118,6 +1503,198 @@
       ...mealPools.dinner
     ];
 
+    const FILTER_DEFS = {
+      ingredients: [
+        ["beef", "牛肉", ["牛肉", "牛柳", "牛排", "卤牛"]],
+        ["chicken", "鸡肉/鸡胸", ["鸡胸", "鸡肉", "鸡腿", "鸡丝", "白切鸡"]],
+        ["egg", "鸡蛋", ["鸡蛋", "水煮蛋", "蒸蛋", "蛋花", "茶叶蛋"]],
+        ["tofu", "豆腐", ["豆腐", "豆腐脑"]],
+        ["fish", "鱼类", ["鱼", "鳕鱼", "三文鱼", "龙利鱼", "金枪鱼", "鱼片", "鳗鱼", "鲈鱼"]],
+        ["shrimp", "虾仁", ["虾", "虾仁"]],
+        ["pork", "瘦猪肉", ["瘦肉", "猪肉", "里脊"]],
+        ["processedMeat", "加工肉", ["火腿", "培根", "香肠", "烤肠", "午餐肉", "鸡块"]],
+        ["milk", "牛奶", ["牛奶", "纯牛奶"]],
+        ["yogurt", "酸奶", ["酸奶", "希腊酸奶", "高蛋白酸奶"]],
+        ["cheese", "奶酪/芝士", ["奶酪", "芝士", "芝士片"]],
+        ["soyMilk", "豆浆", ["豆浆"]],
+        ["rice", "米饭/杂粮饭", ["米饭", "糙米", "杂粮饭", "藜麦饭", "黑米"]],
+        ["noodle", "面/粉", ["面", "荞麦", "米线", "米粉", "意面"]],
+        ["bread", "面包/饼", ["吐司", "贝果", "卷饼", "馒头", "面包", "汉堡", "披萨", "饼"]],
+        ["oats", "燕麦/麦片", ["燕麦", "麦片"]],
+        ["corn", "玉米", ["玉米"]],
+        ["root", "薯类/南瓜山药", ["红薯", "紫薯", "土豆", "南瓜", "山药", "芋头"]],
+        ["tomato", "番茄", ["番茄", "小番茄"]],
+        ["leafy", "绿叶菜", ["青菜", "生菜", "白菜", "娃娃菜", "菠菜", "油麦菜", "菜心", "豆苗"]],
+        ["broccoli", "西兰花", ["西兰花"]],
+        ["cucumber", "黄瓜", ["黄瓜"]],
+        ["fruit", "水果", ["苹果", "橙子", "梨", "蓝莓", "草莓", "香蕉", "猕猴桃", "水果"]],
+        ["nuts", "坚果/花生", ["坚果", "花生"]],
+        ["legume", "杂豆", ["鹰嘴豆", "红豆", "黑豆"]],
+        ["mushroom", "香菇/菌菇", ["香菇", "蘑菇", "菌菇", "菌", "木耳"]],
+        ["dessert", "甜品/糖", ["蛋糕", "甜甜圈", "奶茶", "冰淇淋", "布丁", "蜂蜜", "糖浆"]],
+        ["sugaryDrink", "含糖饮料", ["奶茶", "可乐", "汽水", "果汁", "甜饮", "含糖饮料"]],
+        ["pickle", "腌制/酱菜", ["咸菜", "泡菜", "榨菜", "酸菜", "腌制"]]
+      ],
+      scenes: [
+        ["canteen", "食堂", ["食堂"]],
+        ["convenience", "便利店", ["便利店"]],
+        ["takeout", "外卖", ["外卖"]],
+        ["dorm", "宿舍/微波", ["宿舍", "微波", "电饭锅"]],
+        ["home", "家常", ["家常"]],
+        ["light", "轻食", ["轻食"]],
+        ["noFire", "免开火", ["免开火"]],
+        ["breakfastShop", "早餐铺", ["早餐铺"]],
+        ["hotMeal", "热餐/热早餐", ["热餐", "热早餐"]],
+        ["restaurant", "餐馆", ["餐馆", "餐厅", "烤肉店", "火锅店", "披萨店", "汉堡店"]],
+        ["treat", "放纵餐", ["放纵", "炸鸡", "汉堡", "披萨", "奶茶", "火锅"]]
+      ],
+      methods: [
+        ["noFire", "免开火/即食", ["免开火", "即食", "便利店", "酸奶", "沙拉"]],
+        ["steam", "蒸/煮", ["蒸", "水煮", "清蒸", "蒸蛋"]],
+        ["soup", "清汤/汤面", ["汤", "锅", "煲", "米线", "米粉", "面"]],
+        ["salad", "轻食/沙拉", ["沙拉", "轻食", "冷拌", "生菜"]],
+        ["assemble", "卷饼/三明治", ["卷", "三明治", "吐司", "贝果", "饭团"]],
+        ["quick", "快手/泡发", ["粥", "燕麦", "酸奶", "早餐杯", "麦片"]],
+        ["stir", "快炒/炒饭", ["炒", "快炒", "炒饭"]],
+        ["bake", "烤/焗", ["烤", "烘", "焗", "披萨"]],
+        ["hotpot", "火锅/麻辣烫", ["火锅", "麻辣烫", "冒菜", "串串"]],
+        ["sauceHeavy", "浓酱/盖浇", ["盖饭", "照烧", "咖喱", "酱", "红烧", "卤", "奶油", "汉堡"]],
+        ["spicy", "辛辣", ["辣", "辣油", "辣椒", "红油", "麻辣"]],
+        ["friedHeavy", "油炸重油", ["油炸", "炸", "干锅", "香锅", "油泼", "重油", "炸鸡", "薯条", "鸡块"]]
+      ],
+      ranges: [
+        ["health", "健康程度", 1, 5],
+        ["sweet", "甜度", 1, 5],
+        ["salt", "咸度", 1, 5],
+        ["difficulty", "烹饪难度", 1, 5],
+        ["time", "耗时", 1, 5],
+        ["protein", "蛋白等级", 1, 5]
+      ]
+    };
+
+    const FILTER_GROUPS = {
+      ingredients: [
+        ["animalProtein", "动物蛋白", ["beef", "chicken", "egg", "fish", "shrimp", "pork"]],
+        ["soyProtein", "豆制品/豆类", ["tofu", "soyMilk", "legume"]],
+        ["dairyGroup", "乳制品", ["milk", "yogurt", "cheese"]],
+        ["staples", "主食", ["rice", "noodle", "bread", "oats", "corn", "root"]],
+        ["vegetables", "蔬菜", ["tomato", "leafy", "broccoli", "cucumber", "mushroom"]],
+        ["fruitNut", "水果坚果", ["fruit", "nuts"]],
+        ["treatFood", "放纵/高加工", ["processedMeat", "dessert", "sugaryDrink", "pickle"]]
+      ],
+      scenes: [
+        ["daily", "日常场景", ["canteen", "convenience", "dorm", "home", "breakfastShop"]],
+        ["ordered", "外出/点餐", ["takeout", "restaurant"]],
+        ["lightScene", "轻量场景", ["light", "noFire"]],
+        ["hotScene", "热食场景", ["hotMeal"]],
+        ["treatScene", "放纵选择", ["treat"]]
+      ],
+      methods: [
+        ["easy", "省事做法", ["noFire", "quick", "assemble", "salad"]],
+        ["gentle", "清淡热食", ["steam", "soup"]],
+        ["cook", "正常烹饪", ["stir", "bake"]],
+        ["rich", "重口做法", ["sauceHeavy", "spicy", "hotpot", "friedHeavy"]]
+      ]
+    };
+
+    const RATING_GUIDE = {
+      health: ["炸鸡汉堡奶茶", "泡面烤肠", "普通盖饭", "鸡胸饭/沙拉", "清蒸鱼豆腐青菜"],
+      sweet: ["无糖茶/咸口餐", "水果酸奶", "红豆南瓜", "奶茶半糖", "蛋糕奶茶甜品"],
+      salt: ["清蒸水煮", "少盐家常", "普通外卖", "卤味麻辣烫", "重口火锅干锅"],
+      difficulty: ["拆包即食", "微波/组合", "简单下锅", "多锅多步骤", "复杂宴客菜"],
+      time: ["5分钟内", "10分钟左右", "20分钟左右", "30-45分钟", "45分钟以上"],
+      protein: ["水果甜品", "主食为主", "鸡蛋豆腐", "鸡胸鱼虾", "高蛋白组合"]
+    };
+
+    function sourceText(meal) {
+      return [
+        meal.label,
+        meal.name,
+        meal.brief,
+        ...meal.scene,
+        ...(meal.prep || []).flat()
+      ].join(" ");
+    }
+
+    function findTagIds(text, defs) {
+      return defs
+        .filter(([, , patterns]) => patterns.some((pattern) => text.includes(pattern)))
+        .map(([id]) => id);
+    }
+
+    function clampLevel(value) {
+      return Math.max(1, Math.min(5, value));
+    }
+
+    function scoreMeal(meal, ingredientIds, methodIds) {
+      const text = sourceText(meal);
+      let sweet = 1;
+      if (/水果|苹果|橙子|梨|蓝莓|草莓|香蕉|酸奶|牛奶|红豆|南瓜|红薯|紫薯/.test(text)) sweet = 2;
+      if (/照烧|蜂蜜|甜|香蕉|红豆/.test(text)) sweet = 3;
+      if (/奶茶|果汁|可乐|汽水|蛋糕|甜甜圈|冰淇淋|布丁|甜品/.test(text)) sweet = 4;
+      if (/全糖|双倍糖|糖浆/.test(text)) sweet = 5;
+
+      let salt = 2;
+      if (/卤|酱|照烧|金枪鱼|饭团|便利店|外卖|咸/.test(text)) salt = 3;
+      if (/干锅|香锅|红油|辣油|重口|火锅|麻辣烫|泡面|烤肠|汉堡|披萨|炸鸡/.test(text)) salt = 4;
+      if (/重辣|加辣|咸菜|榨菜|酸菜|泡菜/.test(text)) salt = 5;
+
+      let difficulty = 2;
+      if (methodIds.includes("noFire") || methodIds.includes("assemble") || methodIds.includes("salad")) difficulty = 1;
+      if (methodIds.includes("stir")) difficulty = 3;
+      if (methodIds.includes("hotpot") || methodIds.includes("bake")) difficulty = Math.max(difficulty, 3);
+      if (/多步骤|自制披萨|自制汉堡/.test(text)) difficulty = 4;
+
+      let time = 2;
+      if (methodIds.includes("noFire") || /即食|酸奶|吐司|沙拉/.test(text)) time = 1;
+      if (methodIds.includes("steam") || methodIds.includes("soup")) time = 3;
+      if (/土豆|红薯|紫薯|山药|芋头/.test(text)) time = Math.max(time, 3);
+      if (/火锅|烤|披萨|自制/.test(text)) time = Math.max(time, 4);
+      if (/外卖|便利店|汉堡|奶茶|炸鸡/.test(text)) time = Math.min(time, 2);
+
+      let protein = 2;
+      if (meal.protein >= 28) protein = 3;
+      if (meal.protein >= 36) protein = 4;
+      if (meal.protein >= 45) protein = 5;
+
+      let health = 3;
+      if (protein >= 3) health += 1;
+      if (ingredientIds.some((id) => ["leafy", "broccoli", "tomato", "cucumber", "fruit"].includes(id))) health += 1;
+      if (methodIds.some((id) => ["noFire", "steam", "soup", "salad"].includes(id))) health += 1;
+      if (methodIds.includes("friedHeavy") || methodIds.includes("hotpot")) health -= 2;
+      if (methodIds.includes("spicy") || methodIds.includes("sauceHeavy")) health -= 1;
+      if (ingredientIds.some((id) => ["dessert", "sugaryDrink", "processedMeat"].includes(id))) health -= 2;
+      if (meal.kcal >= 760) health -= 1;
+      if (meal.protein < 18) health -= 1;
+      if (salt >= 4 || sweet >= 4) health -= 1;
+
+      return {
+        health: clampLevel(health),
+        sweet: clampLevel(sweet),
+        salt: clampLevel(salt),
+        difficulty: clampLevel(difficulty),
+        time: clampLevel(time),
+        protein: clampLevel(protein)
+      };
+    }
+
+    function buildMealMeta(meal) {
+      const text = sourceText(meal);
+      const ingredients = findTagIds(text, FILTER_DEFS.ingredients);
+      const scenes = findTagIds(text, FILTER_DEFS.scenes);
+      const methods = [...new Set([...findTagIds(text, FILTER_DEFS.methods), mealStyle(meal)])];
+      return {
+        ingredients,
+        scenes,
+        methods,
+        scores: scoreMeal(meal, ingredients, methods)
+      };
+    }
+
+    mealPoolList.forEach((meal) => {
+      meal.meta = buildMealMeta(meal);
+    });
+
     const state = {
       activeTab: "today",
       settings: loadSettings(),
@@ -1141,9 +1718,10 @@
       shoppingCount: document.getElementById("shoppingCount"),
       shoppingGrid: document.getElementById("shoppingGrid"),
       cycleStart: document.getElementById("cycleStart"),
-      goalText: document.getElementById("goalText"),
-      avoidText: document.getElementById("avoidText"),
-      modeText: document.getElementById("modeText"),
+      ingredientFilters: document.getElementById("ingredientFilters"),
+      sceneFilters: document.getElementById("sceneFilters"),
+      methodFilters: document.getElementById("methodFilters"),
+      rangeFilters: document.getElementById("rangeFilters"),
       recipeModal: document.getElementById("recipeModal"),
       modalMealType: document.getElementById("modalMealType"),
       modalTitle: document.getElementById("modalTitle"),
@@ -1151,11 +1729,44 @@
       modalBody: document.getElementById("modalBody")
     };
 
+    function defaultFilters() {
+      const defaultOffIngredients = ["mushroom", "processedMeat", "dessert", "sugaryDrink", "pickle"];
+      const ingredients = Object.fromEntries(FILTER_DEFS.ingredients.map(([id]) => [id, !defaultOffIngredients.includes(id)]));
+      const scenes = Object.fromEntries(FILTER_DEFS.scenes.map(([id]) => [id, true]));
+      const methods = Object.fromEntries(FILTER_DEFS.methods.map(([id]) => [id, !["spicy", "hotpot", "friedHeavy"].includes(id)]));
+      const ranges = Object.fromEntries(FILTER_DEFS.ranges.map(([id, , min, max]) => [id, { min, max }]));
+      return { ingredients, scenes, methods, ranges };
+    }
+
+    function normalizeFilters(filters) {
+      const defaults = defaultFilters();
+      const normalized = {
+        ingredients: { ...defaults.ingredients, ...(filters?.ingredients || {}) },
+        scenes: { ...defaults.scenes, ...(filters?.scenes || {}) },
+        methods: { ...defaults.methods, ...(filters?.methods || {}) },
+        ranges: { ...defaults.ranges }
+      };
+      for (const [id, , min, max] of FILTER_DEFS.ranges) {
+        const saved = filters?.ranges?.[id] || {};
+        normalized.ranges[id] = {
+          min: Number(saved.min ?? defaults.ranges[id].min),
+          max: Number(saved.max ?? defaults.ranges[id].max)
+        };
+        normalized.ranges[id].min = Math.max(min, Math.min(max, normalized.ranges[id].min));
+        normalized.ranges[id].max = Math.max(min, Math.min(max, normalized.ranges[id].max));
+        if (normalized.ranges[id].min > normalized.ranges[id].max) {
+          normalized.ranges[id] = { min, max };
+        }
+      }
+      return normalized;
+    }
+
     function loadSettings() {
       try {
-        return { ...initialSettings, ...JSON.parse(localStorage.getItem("nutritionPrep.settings") || "{}") };
+        const saved = JSON.parse(localStorage.getItem("nutritionPrep.settings") || "{}");
+        return { ...initialSettings, ...saved, filters: normalizeFilters(saved.filters) };
       } catch {
-        return { ...initialSettings };
+        return { ...initialSettings, filters: normalizeFilters(null) };
       }
     }
 
@@ -1239,13 +1850,72 @@
       return `nutritionPrep.draw.${isoDate(date)}`;
     }
 
+    function mealMatchesFiltersOnly(meal) {
+      const filters = state.settings.filters;
+      const blockedIngredient = Object.entries(filters.ingredients)
+        .some(([id, enabled]) => !enabled && meal.meta.ingredients.includes(id));
+      if (blockedIngredient) return false;
+
+      const sceneValues = Object.values(filters.scenes);
+      const hasSceneLimit = sceneValues.some(Boolean) && !sceneValues.every(Boolean);
+      if (hasSceneLimit && !meal.meta.scenes.some((id) => filters.scenes[id])) return false;
+
+      const blockedMethod = Object.entries(filters.methods)
+        .some(([id, enabled]) => !enabled && meal.meta.methods.includes(id));
+      if (blockedMethod) return false;
+
+      return FILTER_DEFS.ranges.every(([id]) => {
+        const range = filters.ranges[id];
+        const value = meal.meta.scores[id];
+        return value >= range.min && value <= range.max;
+      });
+    }
+
+    function filteredPools() {
+      return {
+        breakfast: mealPools.breakfast.filter(mealMatchesFiltersOnly),
+        lunch: mealPools.lunch.filter(mealMatchesFiltersOnly),
+        dinner: mealPools.dinner.filter(mealMatchesFiltersOnly)
+      };
+    }
+
+    function filteredMealPoolList() {
+      const pools = filteredPools();
+      return [...pools.breakfast, ...pools.lunch, ...pools.dinner];
+    }
+
+    function drawMatchesFilters(draw) {
+      if (!draw) return false;
+      const breakfast = mealPools.breakfast[draw.breakfast];
+      const lunch = mealPools.lunch[draw.lunch];
+      const dinner = mealPools.dinner[draw.dinner];
+      return [breakfast, lunch, dinner].every((meal) => meal && mealMatchesFiltersOnly(meal));
+    }
+
+    function pickMealIndex(rand, type, pool, previousIndex = null) {
+      if (!pool.length) return null;
+      let meal = pool[pickIndex(rand, pool.length)];
+      if (pool.length > 1 && previousIndex !== null && mealPools[type].findIndex((item) => item.id === meal.id) === previousIndex) {
+        meal = pool[mod(pool.findIndex((item) => item.id === meal.id) + 1 + pickIndex(rand, pool.length - 1), pool.length)];
+      }
+      return mealPools[type].findIndex((item) => item.id === meal.id);
+    }
+
+    function drawFromPools(date, seedText) {
+      const pools = filteredPools();
+      if (!pools.breakfast.length || !pools.lunch.length || !pools.dinner.length) return null;
+      const rand = seededRandom(hashString(seedText));
+      return {
+        breakfast: pickMealIndex(rand, "breakfast", pools.breakfast),
+        lunch: pickMealIndex(rand, "lunch", pools.lunch),
+        dinner: pickMealIndex(rand, "dinner", pools.dinner),
+        mode: seedText.includes("manual") ? "manual" : "date",
+        updatedAt: new Date().toISOString()
+      };
+    }
+
     function defaultDraw(date) {
-      const rand = seededRandom(hashString(`${isoDate(date)}|${state.settings.cycleStart}|nutrition-lottery`));
-      const breakfast = pickIndex(rand, mealPools.breakfast.length);
-      const lunch = pickIndex(rand, mealPools.lunch.length);
-      let dinner = pickIndex(rand, mealPools.dinner.length);
-      if (dinner === lunch) dinner = mod(dinner + 1 + pickIndex(rand, mealPools.dinner.length - 1), mealPools.dinner.length);
-      return { breakfast, lunch, dinner, mode: "date" };
+      return drawFromPools(date, `${isoDate(date)}|${state.settings.cycleStart}|nutrition-lottery`);
     }
 
     function savedDraw(date) {
@@ -1258,26 +1928,18 @@
     }
 
     function randomDraw(date) {
-      const rand = seededRandom(hashString(`${isoDate(date)}|${Date.now()}|${Math.random()}`));
-      const breakfast = pickIndex(rand, mealPools.breakfast.length);
-      const lunch = pickIndex(rand, mealPools.lunch.length);
-      let dinner = pickIndex(rand, mealPools.dinner.length);
-      if (dinner === lunch) dinner = mod(dinner + 1 + pickIndex(rand, mealPools.dinner.length - 1), mealPools.dinner.length);
-      const draw = { breakfast, lunch, dinner, mode: "manual", updatedAt: new Date().toISOString() };
+      const draw = drawFromPools(date, `${isoDate(date)}|manual|${Date.now()}|${Math.random()}`);
+      if (!draw) return null;
       localStorage.setItem(drawKey(date), JSON.stringify(draw));
       return draw;
     }
 
     function rerollMeal(date, type) {
-      const current = savedDraw(date) || defaultDraw(date);
-      const pool = mealPools[type];
-      if (!pool) return current;
+      const current = drawMatchesFilters(savedDraw(date)) ? savedDraw(date) : defaultDraw(date);
+      const pool = filteredPools()[type];
+      if (!current || !pool?.length) return current;
       const rand = seededRandom(hashString(`${isoDate(date)}|${type}|${Date.now()}|${Math.random()}`));
-      const currentIndex = mod(current[type], pool.length);
-      let nextIndex = pickIndex(rand, pool.length);
-      if (pool.length > 1 && nextIndex === currentIndex) {
-        nextIndex = mod(nextIndex + 1 + pickIndex(rand, pool.length - 1), pool.length);
-      }
+      const nextIndex = pickMealIndex(rand, type, pool, current[type]);
       const draw = {
         ...current,
         [type]: nextIndex,
@@ -1289,11 +1951,13 @@
     }
 
     function chooseMeal(date, meal) {
-      if (!meal || !mealPools[meal.type]) return savedDraw(date) || defaultDraw(date);
+      if (!meal || !mealPools[meal.type] || !mealMatchesFiltersOnly(meal)) return drawMatchesFilters(savedDraw(date)) ? savedDraw(date) : defaultDraw(date);
       const index = mealPools[meal.type].findIndex((item) => item.id === meal.id);
-      if (index < 0) return savedDraw(date) || defaultDraw(date);
+      if (index < 0) return drawMatchesFilters(savedDraw(date)) ? savedDraw(date) : defaultDraw(date);
+      const baseDraw = drawMatchesFilters(savedDraw(date)) ? savedDraw(date) : defaultDraw(date);
+      if (!baseDraw) return null;
       const draw = {
-        ...(savedDraw(date) || defaultDraw(date)),
+        ...baseDraw,
         [meal.type]: index,
         mode: "manual",
         updatedAt: new Date().toISOString()
@@ -1303,6 +1967,7 @@
     }
 
     function comboFromDraw(draw) {
+      if (!draw) return null;
       const breakfast = mealPools.breakfast[mod(draw.breakfast, mealPools.breakfast.length)];
       const lunch = mealPools.lunch[mod(draw.lunch, mealPools.lunch.length)];
       const dinner = mealPools.dinner[mod(draw.dinner, mealPools.dinner.length)];
@@ -1341,7 +2006,8 @@
     function planFor(date) {
       const start = parseLocalDate(state.settings.cycleStart);
       const diff = Math.floor((date - start) / DAY);
-      const draw = savedDraw(date) || defaultDraw(date);
+      const saved = savedDraw(date);
+      const draw = drawMatchesFilters(saved) ? saved : defaultDraw(date);
       return { plan: comboFromDraw(draw), draw, index: mod(diff, plans.length), cycleDay: diff + 1 };
     }
 
@@ -1366,6 +2032,26 @@
     function renderToday() {
       const baseDate = selectedDate();
       const { plan, index, cycleDay } = planFor(baseDate);
+      const pools = filteredPools();
+      const comboTotal = pools.breakfast.length * pools.lunch.length * pools.dinner.length;
+
+      if (!plan) {
+        els.dateLine.textContent = `${formatDate(baseDate)} · 当前筛选无完整三餐`;
+        els.prepTitle.textContent = "筛选后暂无备料";
+        els.mealTitle.textContent = "筛选后无可用三餐";
+        els.dayIndex.textContent = "请放宽筛选";
+        els.prepCount.textContent = "0/0";
+        els.prepList.innerHTML = `<article class="prep-item"><div class="item-name">没有符合条件的完整三餐</div><div class="item-note">请到设置页勾回一些食材/做法/场景，或放宽健康、甜度、咸度、难度、耗时区间。</div></article>`;
+        els.mealGrid.innerHTML = "";
+        els.metrics.innerHTML = [
+          ["早餐", `${pools.breakfast.length}`, "可选"],
+          ["午餐", `${pools.lunch.length}`, "可选"],
+          ["晚餐", `${pools.dinner.length}`, "可选"]
+        ].map(([label, value, note]) => `<div class="metric"><b>${value}</b><span>${label} · ${note}</span></div>`).join("");
+        els.swapBox.textContent = "筛选条件同时作用于抽奖、单餐重抽、菜单库和点菜。";
+        return;
+      }
+
       const doneCount = plan.prep.filter((_, i) => isChecked("prep", baseDate, i)).length;
 
       els.dateLine.textContent = `${formatDate(baseDate)} · 今日三餐与备料`;
@@ -1413,7 +2099,7 @@
       els.metrics.innerHTML = [
         ["热量", `${plan.kcal} kcal`, "估算全天"],
         ["蛋白质", `${plan.protein} g`, "估算全天"],
-        ["组合数", `${mealPools.breakfast.length * mealPools.lunch.length * mealPools.dinner.length}+`, "可继续扩展"]
+        ["可抽组合", `${comboTotal}+`, "筛选后"]
       ].map(([label, value, note]) => `
         <div class="metric"><b>${value}</b><span>${label} · ${note}</span></div>
       `).join("");
@@ -1445,16 +2131,87 @@
       return parts.every((part) => text.includes(part));
     }
 
+    function filterDefLabel(group, id) {
+      const found = FILTER_DEFS[group].find(([key]) => key === id);
+      return found ? found[1] : id;
+    }
+
+    function uniqueMetaLabels(group, ids, fallback = []) {
+      return [...new Set([...(ids || []).map((id) => filterDefLabel(group, id)), ...fallback])].filter(Boolean);
+    }
+
+    function renderMetaChips(labels, type) {
+      if (!labels.length) return `<span class="meta-chip empty">未标注</span>`;
+      return labels.map((label) => `<span class="meta-chip ${type}">${label}</span>`).join("");
+    }
+
+    const LEVEL_LABELS = ["", "很低", "较低", "中等", "较高", "很高"];
+    const RATING_PALETTES = {
+      positive: ["#cf6b52", "#d9923b", "#c6a744", "#759f5b", "#2f6b4f"],
+      caution: ["#2f6b4f", "#789b5b", "#c6a744", "#d9923b", "#cf5f4d"]
+    };
+
+    function levelPercent(value, min = 1, max = 5) {
+      return `${((value - min) / (max - min)) * 100}%`;
+    }
+
+    function ratingColor(id, value) {
+      const palette = ["health", "protein"].includes(id) ? RATING_PALETTES.positive : RATING_PALETTES.caution;
+      return palette[clampLevel(value) - 1];
+    }
+
+    function ratingSoftColor(color) {
+      return `${color}1f`;
+    }
+
+    function renderMealMeta(meal) {
+      const ingredients = uniqueMetaLabels("ingredients", meal.meta.ingredients);
+      const scenes = uniqueMetaLabels("scenes", meal.meta.scenes, meal.scene);
+      const methods = uniqueMetaLabels("methods", meal.meta.methods);
+      const ratings = FILTER_DEFS.ranges.map(([id, label]) => {
+        const value = meal.meta.scores[id];
+        const color = ratingColor(id, value);
+        return `
+          <span class="rating-pill" style="--level: ${value}; --rating-color: ${color}; --rating-soft: ${ratingSoftColor(color)};" title="${label}：${value} · ${LEVEL_LABELS[value]}">
+            <span>${label}</span>
+            <span class="rating-meter" aria-hidden="true"><span></span></span>
+            <b>${value}</b>
+          </span>
+        `;
+      }).join("");
+      return `
+        <div class="card-meta" aria-label="${meal.name} 的筛选标签和评级">
+          <div class="meta-group">
+            <div class="meta-title">食材标签</div>
+            <div class="meta-tags">${renderMetaChips(ingredients, "food")}</div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-title">场景标签</div>
+            <div class="meta-tags">${renderMetaChips(scenes, "scene")}</div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-title">做法标签</div>
+            <div class="meta-tags">${renderMetaChips(methods, "method")}</div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-title">等级评级</div>
+            <div class="rating-grid">${ratings}</div>
+          </div>
+        </div>
+      `;
+    }
+
     function renderLibrary() {
       const query = state.search.trim();
-      const filtered = mealPoolList.filter((meal) => mealMatchesQuery(meal, query));
-      els.recipeCount.textContent = `${filtered.length}/${mealPoolList.length}`;
+      const available = filteredMealPoolList();
+      const filtered = available.filter((meal) => mealMatchesQuery(meal, query));
+      els.recipeCount.textContent = `${filtered.length}/${available.length} · 总${mealPoolList.length}`;
       els.recipeList.innerHTML = filtered.map((meal) => `
         <article class="recipe-item" tabindex="0" role="button" data-meal-id="${meal.id}" aria-label="查看 ${meal.name} 的完整做法">
           <div class="subhead">${meal.label} · 池 ${meal.sourceIndex + 1}</div>
           <div class="meal-name">${meal.name}</div>
           <p class="recipe-meta">${meal.brief}</p>
-          <div class="tag-row">${meal.scene.map((s, n) => `<span class="tag ${n % 2 ? "blue" : "green"}">${s}</span>`).join("")}</div>
+          ${renderMealMeta(meal)}
           <p class="item-note">${meal.swap}</p>
           <div class="library-actions">
             <span class="cook-hint">点击查看完整做法</span>
@@ -1467,6 +2224,12 @@
     function renderShopping() {
       const baseDate = selectedDate();
       const { plan } = planFor(baseDate);
+      if (!plan) {
+        els.shoppingTitle.textContent = `当前筛选无可采购清单 · ${formatDate(baseDate)}`;
+        els.shoppingCount.textContent = "0/0";
+        els.shoppingGrid.innerHTML = `<article class="shop-item"><div class="item-name">没有符合条件的采购清单</div><div class="item-note">请先放宽设置页筛选条件。</div></article>`;
+        return;
+      }
       const items = mergeShopping(plan);
       const doneCount = items.filter((_, i) => isChecked("shop", baseDate, i)).length;
 
@@ -1503,7 +2266,7 @@
     }
 
     function currentMeal(type) {
-      return currentPlan().meals[type];
+      return currentPlan()?.meals[type];
     }
 
     function mealById(id) {
@@ -1522,6 +2285,10 @@
 
     function mealStyle(meal) {
       const text = `${meal.name} ${meal.brief}`;
+      if (/炸|薯条|鸡块/.test(text)) return "friedHeavy";
+      if (/火锅|麻辣烫|冒菜|串串/.test(text)) return "hotpot";
+      if (/烤|披萨|焗/.test(text)) return "bake";
+      if (/盖饭|照烧|咖喱|红烧|奶油|酱/.test(text)) return "sauceHeavy";
       if (/沙拉|轻食|冷拌|生菜/.test(text)) return "salad";
       if (/卷|三明治|吐司|贝果|饭团/.test(text)) return "assemble";
       if (/粥|燕麦|酸奶|早餐杯|麦片/.test(text)) return "quick";
@@ -1588,7 +2355,7 @@
           "加 1-2 汤匙水帮助焖熟，最后用少量盐、低钠酱油、黑胡椒调味，关火后再和主食装盘。"
         ]
       };
-      return steps[style];
+      return steps[style] || steps.stir;
     }
 
     function seasoningTips(meal) {
@@ -1667,11 +2434,108 @@
       els.recipeModal.setAttribute("aria-hidden", "true");
     }
 
+    function renderTagFilters(container, group, defs) {
+      const values = state.settings.filters[group];
+      const groupedIds = new Set((FILTER_GROUPS[group] || []).flatMap(([, , ids]) => ids));
+      const fallbackGroup = ["other", "其他", defs.map(([id]) => id).filter((id) => !groupedIds.has(id))];
+      const groups = [...(FILTER_GROUPS[group] || []), ...(fallbackGroup[2].length ? [fallbackGroup] : [])];
+      container.innerHTML = groups.map(([groupId, groupLabel, ids]) => {
+        const activeIds = ids.filter((id) => values[id] !== undefined);
+        const checkedCount = activeIds.filter((id) => values[id]).length;
+        const allChecked = activeIds.length > 0 && checkedCount === activeIds.length;
+        return `
+          <div class="filter-group-card">
+            <div class="filter-group-head">
+              <label class="filter-tag parent">
+                <input type="checkbox" data-filter-parent="${group}" data-filter-parent-id="${groupId}" data-filter-children="${activeIds.join(",")}" ${allChecked ? "checked" : ""}>
+                <span>${groupLabel}</span>
+              </label>
+              <span class="filter-group-note">${checkedCount}/${activeIds.length}</span>
+            </div>
+            <div class="filter-children">
+              ${activeIds.map((id) => `
+                <label class="filter-tag child">
+                  <input type="checkbox" data-filter-group="${group}" data-filter-id="${id}" ${values[id] ? "checked" : ""}>
+                  <span>${filterDefLabel(group, id)}</span>
+                </label>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+      container.querySelectorAll("[data-filter-parent]").forEach((input) => {
+        const ids = input.dataset.filterChildren.split(",").filter(Boolean);
+        const checkedCount = ids.filter((id) => values[id]).length;
+        input.indeterminate = checkedCount > 0 && checkedCount < ids.length;
+      });
+    }
+
+    function renderRangeFilters() {
+      els.rangeFilters.innerHTML = FILTER_DEFS.ranges.map(([id, label, min, max]) => {
+        const range = state.settings.filters.ranges[id];
+        return `
+          <div class="range-filter">
+            <label>${label}</label>
+            <div class="range-control">
+              <div class="range-slider" data-range-slider="${id}" style="--min-pos: ${levelPercent(range.min, min, max)}; --max-pos: ${levelPercent(range.max, min, max)};">
+                <div class="range-track" aria-hidden="true"></div>
+                <input type="range" min="${min}" max="${max}" step="1" value="${range.min}" data-range-id="${id}" data-range-end="min" aria-label="${label} 最低">
+                <input type="range" min="${min}" max="${max}" step="1" value="${range.max}" data-range-id="${id}" data-range-end="max" aria-label="${label} 最高">
+              </div>
+              <div class="range-values" data-range-values="${id}">
+                <span>最低 <b>${range.min} · ${LEVEL_LABELS[range.min]}</b></span>
+                <span>最高 <b>${range.max} · ${LEVEL_LABELS[range.max]}</b></span>
+              </div>
+              <div class="range-examples">
+                ${RATING_GUIDE[id].map((example, index) => {
+                  const level = index + 1;
+                  const color = ratingColor(id, level);
+                  return `<span class="range-example" style="--rating-color: ${color}; --rating-soft: ${ratingSoftColor(color)};"><b>${level}</b>${example}</span>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function rangeDef(id) {
+      return FILTER_DEFS.ranges.find(([rangeId]) => rangeId === id);
+    }
+
+    function syncRangeControl(id) {
+      const [, , min, max] = rangeDef(id);
+      const range = state.settings.filters.ranges[id];
+      document.querySelectorAll(`[data-range-slider="${id}"]`).forEach((slider) => {
+        slider.style.setProperty("--min-pos", levelPercent(range.min, min, max));
+        slider.style.setProperty("--max-pos", levelPercent(range.max, min, max));
+        slider.querySelector('[data-range-end="min"]').value = range.min;
+        slider.querySelector('[data-range-end="max"]').value = range.max;
+      });
+      document.querySelectorAll(`[data-range-values="${id}"]`).forEach((values) => {
+        values.innerHTML = `
+          <span>最低 <b>${range.min} · ${LEVEL_LABELS[range.min]}</b></span>
+          <span>最高 <b>${range.max} · ${LEVEL_LABELS[range.max]}</b></span>
+        `;
+      });
+    }
+
+    function updateRangeFromInput(input) {
+      const { rangeId, rangeEnd } = input.dataset;
+      const range = state.settings.filters.ranges[rangeId];
+      range[rangeEnd] = Number(input.value);
+      if (range.min > range.max) {
+        range[rangeEnd === "min" ? "max" : "min"] = range[rangeEnd];
+      }
+      syncRangeControl(rangeId);
+    }
+
     function renderSettings() {
       els.cycleStart.value = state.settings.cycleStart;
-      els.goalText.value = state.settings.goal;
-      els.avoidText.value = state.settings.avoid;
-      els.modeText.value = state.settings.mode;
+      renderTagFilters(els.ingredientFilters, "ingredients", FILTER_DEFS.ingredients);
+      renderTagFilters(els.sceneFilters, "scenes", FILTER_DEFS.scenes);
+      renderTagFilters(els.methodFilters, "methods", FILTER_DEFS.methods);
+      renderRangeFilters();
     }
 
     function renderAll() {
@@ -1712,9 +2576,41 @@
     });
 
     document.body.addEventListener("change", (event) => {
+      if (event.target.matches("[data-filter-parent]")) {
+        const group = event.target.dataset.filterParent;
+        const ids = event.target.dataset.filterChildren.split(",").filter(Boolean);
+        ids.forEach((id) => {
+          state.settings.filters[group][id] = event.target.checked;
+        });
+        saveSettings();
+        renderAll();
+        return;
+      }
+      if (event.target.matches("[data-filter-group]")) {
+        const { filterGroup, filterId } = event.target.dataset;
+        state.settings.filters[filterGroup][filterId] = event.target.checked;
+        saveSettings();
+        renderAll();
+        return;
+      }
+      if (event.target.matches("[data-range-id]")) {
+        updateRangeFromInput(event.target);
+        saveSettings();
+        renderAll();
+        return;
+      }
       if (!event.target.matches(".check")) return;
       setChecked(event.target.dataset.type, selectedDate(), event.target.dataset.index, event.target.checked);
       renderAll();
+    });
+
+    document.body.addEventListener("input", (event) => {
+      if (!event.target.matches("[data-range-id]")) return;
+      updateRangeFromInput(event.target);
+      saveSettings();
+      renderToday();
+      renderLibrary();
+      renderShopping();
     });
 
     document.body.addEventListener("click", (event) => {
@@ -1767,12 +2663,27 @@
       renderLibrary();
     });
 
+    document.getElementById("selectAllFilters").addEventListener("click", () => {
+      for (const group of ["ingredients", "scenes", "methods"]) {
+        Object.keys(state.settings.filters[group]).forEach((id) => {
+          state.settings.filters[group][id] = true;
+        });
+      }
+      saveSettings();
+      renderAll();
+    });
+
+    document.getElementById("resetFilters").addEventListener("click", () => {
+      state.settings.filters = normalizeFilters(null);
+      saveSettings();
+      renderAll();
+    });
+
     document.getElementById("saveSettings").addEventListener("click", () => {
       state.settings = {
+        ...state.settings,
         cycleStart: els.cycleStart.value || initialSettings.cycleStart,
-        goal: els.goalText.value.trim() || initialSettings.goal,
-        avoid: els.avoidText.value.trim() || initialSettings.avoid,
-        mode: els.modeText.value.trim() || initialSettings.mode
+        filters: normalizeFilters(state.settings.filters)
       };
       saveSettings();
       renderAll();
