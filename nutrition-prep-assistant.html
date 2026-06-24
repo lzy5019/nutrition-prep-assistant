@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>营养备料助手</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f4;
+      --ink: #17201b;
+      --muted: #687269;
+      --line: #d8ded5;
+      --surface: #ffffff;
+      --surface-2: #eef3ed;
+      --green: #2f6b4f;
+      --blue: #2f5f8f;
+      --coral: #c85f45;
+      --yellow: #f4c95d;
+      --mint: #dcebe2;
+      --shadow: 0 14px 32px rgba(29, 43, 34, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #fbfcf8 0%, var(--bg) 38%, #eff3ef 100%);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: #9db4a4; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(47, 95, 143, 0.24);
+      outline-offset: 2px;
+    }
+
+    .app-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 34px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: conic-gradient(from 25deg, var(--green), var(--yellow), var(--coral), var(--blue), var(--green));
+      box-shadow: var(--shadow);
+    }
+
+    .brand-mark::before {
+      content: "";
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 6px solid #fff;
+      background: #f8efe4;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.1;
+    }
+
+    .date-line {
+      color: var(--muted);
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-color: var(--green);
+      background: var(--green);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .tab {
+      min-height: 42px;
+      border: 0;
+      background: transparent;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .tab[aria-selected="true"] {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(23, 32, 27, 0.12);
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .summary-band {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .today-panel, .tomorrow-panel, .library-panel, .settings-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .panel-title h2 {
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .plate-visual {
+      position: relative;
+      width: min(100%, 360px);
+      aspect-ratio: 1.55;
+      margin: 16px auto 6px;
+      border-radius: 8px;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.92), rgba(255,255,255,0.62)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='460' viewBox='0 0 720 460'%3E%3Crect width='720' height='460' fill='%23eef3ed'/%3E%3Cellipse cx='360' cy='230' rx='230' ry='145' fill='%23ffffff' stroke='%23d8ded5' stroke-width='18'/%3E%3Cpath d='M219 183c48-66 141-69 193-12 34 37 34 96-2 132-47 46-134 42-184-2-38-33-41-78-7-118z' fill='%23e27357'/%3E%3Cpath d='M380 142c73-19 151 20 167 88 13 56-21 104-79 117-71 17-145-20-163-84-17-59 20-105 75-121z' fill='%23f4c95d'/%3E%3Cpath d='M252 252c60-19 137-7 174 35 25 29 14 69-26 88-55 27-147 10-187-28-36-35-19-76 39-95z' fill='%232f6b4f'/%3E%3Ccircle cx='514' cy='169' r='42' fill='%232f5f8f'/%3E%3Ccircle cx='176' cy='284' r='35' fill='%23ffffff' opacity='.7'/%3E%3C/svg%3E");
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    .prep-list, .meal-list, .recipe-list, .shopping-grid {
+      display: grid;
+      gap: 10px;
+      padding: 16px 18px 18px;
+    }
+
+    .prep-item, .meal-item, .recipe-item, .shop-item {
+      display: grid;
+      gap: 7px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .prep-item.done, .shop-item.done { opacity: 0.58; }
+
+    .prep-row, .shop-row {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .check {
+      width: 22px;
+      height: 22px;
+      margin: 1px 0 0;
+      accent-color: var(--green);
+    }
+
+    .item-name {
+      font-weight: 800;
+      line-height: 1.28;
+    }
+
+    .item-note, .meal-meta, .recipe-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: #f2efe7;
+      color: #75583a;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tag.blue { background: #e6eff8; color: var(--blue); }
+    .tag.red { background: #fae8e2; color: var(--coral); }
+    .tag.green { background: var(--mint); color: var(--green); }
+
+    .meal-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .meal-brief {
+      line-height: 1.55;
+      color: #26352c;
+    }
+
+    .meal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 16px 18px 18px;
+    }
+
+    .meal-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 14px;
+      display: grid;
+      gap: 9px;
+      min-height: 210px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .meal-card:hover {
+      border-color: #9db4a4;
+      box-shadow: 0 10px 22px rgba(29, 43, 34, 0.08);
+    }
+
+    .meal-card:nth-child(1) { border-top: 5px solid var(--yellow); }
+    .meal-card:nth-child(2) { border-top: 5px solid var(--green); }
+    .meal-card:nth-child(3) { border-top: 5px solid var(--coral); }
+
+    .subhead {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .swap-box {
+      margin: 0 18px 18px;
+      padding: 13px;
+      border-radius: 8px;
+      background: #f9f4e7;
+      border: 1px solid #eadab1;
+      color: #4d4025;
+      line-height: 1.55;
+    }
+
+    .cook-hint {
+      margin-top: auto;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .meal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .reroll-meal,
+    .choose-meal {
+      min-height: 32px;
+      padding: 0 10px;
+      border-color: #cfd8d0;
+      background: #f7faf8;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .library-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(23, 32, 27, 0.48);
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-panel {
+      width: min(820px, 100%);
+      max-height: min(88vh, 860px);
+      overflow: auto;
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      border: 1px solid var(--line);
+    }
+
+    .modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h2 {
+      font-size: 24px;
+      line-height: 1.18;
+    }
+
+    .modal-close {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      font-size: 22px;
+    }
+
+    .modal-body {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .recipe-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcf8;
+    }
+
+    .recipe-section h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .recipe-section ul,
+    .recipe-section ol {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.65;
+    }
+
+    .recipe-section li + li { margin-top: 6px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 0 18px 18px;
+    }
+
+    .metric {
+      padding: 12px;
+      border-radius: 8px;
+      background: #f0f5f8;
+      border: 1px solid #d7e4ed;
+    }
+
+    .metric b {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .library-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 16px 18px 0;
+    }
+
+    .search-box, .date-input, textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 9px 11px;
+    }
+
+    .recipe-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .recipe-item {
+      min-height: 190px;
+      align-content: start;
+    }
+
+    .recipe-item[data-meal-id] {
+      cursor: pointer;
+    }
+
+    .recipe-item[data-meal-id]:hover {
+      border-color: #9db4a4;
+      box-shadow: 0 10px 22px rgba(29, 43, 34, 0.08);
+    }
+
+    .shopping-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .summary-band, .meal-grid, .recipe-list, .shopping-grid, .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar { justify-content: flex-start; }
+    }
+
+    @media (max-width: 620px) {
+      .app-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .library-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .meal-card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <h1>营养备料助手</h1>
+          <p class="date-line" id="dateLine"></p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="primary-btn" id="randomizeMeals" title="重新抽今日三餐"><span aria-hidden="true">◇</span><span>重抽三餐</span></button>
+        <button class="primary-btn" id="resetChecks" title="清空当天勾选"><span aria-hidden="true">↻</span><span>重置勾选</span></button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="主视图">
+      <button class="tab" data-tab="today" aria-selected="true">今日</button>
+      <button class="tab" data-tab="library" aria-selected="false">菜单库</button>
+      <button class="tab" data-tab="shopping" aria-selected="false">采购</button>
+      <button class="tab" data-tab="settings" aria-selected="false">设置</button>
+    </nav>
+
+    <section class="view active" id="view-today">
+      <div class="summary-band">
+        <section class="today-panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <span class="badge">今天备料</span>
+              <h2 id="prepTitle"></h2>
+            </div>
+            <span class="badge" id="prepCount"></span>
+          </div>
+          <div class="plate-visual" aria-hidden="true"></div>
+          <div class="prep-list" id="prepList"></div>
+        </section>
+
+        <section class="tomorrow-panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <span class="badge">今日三餐</span>
+              <h2 id="mealTitle"></h2>
+            </div>
+            <span class="badge" id="dayIndex"></span>
+          </div>
+          <div class="meal-grid" id="mealGrid"></div>
+          <div class="metrics" id="metrics"></div>
+          <div class="swap-box" id="swapBox"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-library">
+      <section class="library-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <span class="badge">轮换菜单</span>
+            <h2>健康单餐抽奖池</h2>
+          </div>
+          <span class="badge" id="recipeCount"></span>
+        </div>
+        <div class="library-controls">
+          <input class="search-box" id="searchBox" type="search" placeholder="搜索食材、做法、场景">
+          <button class="icon-btn" id="clearSearch" title="清空搜索" aria-label="清空搜索">×</button>
+        </div>
+        <div class="recipe-list" id="recipeList"></div>
+      </section>
+    </section>
+
+    <section class="view" id="view-shopping">
+      <section class="library-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <span class="badge">采购</span>
+            <h2 id="shoppingTitle"></h2>
+          </div>
+          <span class="badge" id="shoppingCount"></span>
+        </div>
+        <div class="shopping-grid" id="shoppingGrid"></div>
+      </section>
+    </section>
+
+    <section class="view" id="view-settings">
+      <section class="settings-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <span class="badge">本地设置</span>
+            <h2>轮换起点与忌口</h2>
+          </div>
+          <button class="primary-btn" id="saveSettings" title="保存设置"><span aria-hidden="true">✓</span><span>保存</span></button>
+        </div>
+        <div class="settings-grid">
+          <div class="field">
+            <label for="cycleStart">第 1 天日期</label>
+            <input class="date-input" id="cycleStart" type="date">
+          </div>
+          <div class="field">
+            <label for="goalText">当前目标</label>
+            <input class="date-input" id="goalText" type="text">
+          </div>
+          <div class="field">
+            <label for="avoidText">忌口/不耐受</label>
+            <textarea id="avoidText"></textarea>
+          </div>
+          <div class="field">
+            <label for="modeText">可用场景</label>
+            <textarea id="modeText"></textarea>
+          </div>
+        </div>
+      </section>
+      <p class="footer-note">数据保存在当前浏览器本地。默认避开香菇、重油、重辣；如果出现皮肤、胃肠或呼吸道不适，先停用可疑食物并记录。</p>
+    </section>
+  </main>
+
+  <section class="modal" id="recipeModal" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <span class="badge" id="modalMealType"></span>
+          <h2 id="modalTitle"></h2>
+          <p class="date-line" id="modalSubtitle"></p>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="关闭做法">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </section>
+
+  <script>
+    const DAY = 24 * 60 * 60 * 1000;
+    const initialSettings = {
+      cycleStart: "2026-06-24",
+      goal: "规律三餐、少油少辣、优先高蛋白和足量蔬菜",
+      avoid: "香菇及含香菇菜品；明显重油、油炸、干锅、香锅、油泼；强辣；任何曾引发皮肤、胃肠或呼吸道不适的食物",
+      mode: "食堂、便利店、外卖轻食、宿舍微波/电饭锅、普通家常菜"
+    };
+
+    const plans = [
+      {
+        name: "番茄牛肉荞麦面日",
+        scene: ["家常", "外卖可替换"],
+        kcal: 1650,
+        protein: 112,
+        prep: [
+          ["牛肉片或卤牛肉", "120-150g，冷藏解冻；无厨房可买即食卤牛肉或低脂牛肉片"],
+          ["番茄", "2 个，洗净；午餐做汤底或点番茄牛肉汤面"],
+          ["荞麦面", "80-100g 干重，放到顺手的位置"],
+          ["黄瓜和生菜", "各 1 份，洗净沥干，晚餐做鸡肉卷配菜"]
+        ],
+        meals: {
+          breakfast: ["酸奶燕麦水果杯", "无糖酸奶 250g + 燕麦 40g + 蓝莓/草莓 150g + 水煮蛋 1 个"],
+          lunch: ["番茄牛肉荞麦面", "番茄汤底 + 牛肉 120g + 荞麦面 1 碗 + 青菜 200g，少油不辣"],
+          dinner: ["鸡胸生菜全麦卷", "即食鸡胸 120g + 全麦卷饼 1 张 + 生菜黄瓜番茄，酱料半量"]
+        },
+        swap: "没有荞麦面就换米饭 100-150g；不想做饭可点番茄牛肉汤粉，备注少油不辣、不要香菇。"
+      },
+      {
+        name: "三文鱼土豆碗日",
+        scene: ["便利店", "家常"],
+        kcal: 1720,
+        protein: 108,
+        prep: [
+          ["三文鱼或鳕鱼", "150g，冷藏解冻；无厨房可换即食金枪鱼水浸罐头"],
+          ["小土豆", "250g，洗净；可提前蒸熟冷藏"],
+          ["西兰花", "250g，切小朵；冷冻西兰花也可以"],
+          ["鸡蛋", "2 个，提前水煮备用"]
+        ],
+        meals: {
+          breakfast: ["玉米鸡蛋豆浆", "玉米 1 根 + 水煮蛋 2 个 + 无糖豆浆 300ml + 苹果 1 个"],
+          lunch: ["三文鱼土豆碗", "三文鱼 150g + 土豆 250g + 西兰花 250g，柠檬汁/黑胡椒，少油"],
+          dinner: ["豆腐鸡蛋青菜汤饭", "嫩豆腐 200g + 鸡蛋 1 个 + 青菜 250g + 米饭 100g"]
+        },
+        swap: "鱼类不方便就换鸡胸、虾仁或豆腐；土豆可换红薯、玉米或半碗米饭。"
+      },
+      {
+        name: "虾仁糙米饭日",
+        scene: ["家常", "宿舍微波"],
+        kcal: 1680,
+        protein: 116,
+        prep: [
+          ["虾仁", "180g，冷藏解冻，确认无过敏史"],
+          ["糙米饭", "需要熟饭 150g；可买即食糙米饭"],
+          ["彩椒和西葫芦", "各 1 个，洗净切块或买净菜"],
+          ["无糖酸奶", "150-200g，作为加餐或早餐蛋白"]
+        ],
+        meals: {
+          breakfast: ["全麦金枪鱼吐司", "全麦吐司 2 片 + 水浸金枪鱼 80g + 生菜番茄 + 牛奶 250ml"],
+          lunch: ["虾仁彩椒糙米饭", "虾仁 180g + 彩椒西葫芦 250g + 糙米饭 150g，少油快炒/微波"],
+          dinner: ["牛肉蔬菜汤", "瘦牛肉 120g + 娃娃菜 250g + 番茄 1 个 + 玉米半根"]
+        },
+        swap: "虾仁不确定耐受时换鸡蛋 2 个加豆腐 150g；外卖选虾仁轻食饭，酱汁分装。"
+      },
+      {
+        name: "鸡腿南瓜饭日",
+        scene: ["食堂", "家常"],
+        kcal: 1700,
+        protein: 110,
+        prep: [
+          ["去皮鸡腿肉", "150g，冷藏解冻；可换白切鸡/卤鸡腿去皮"],
+          ["南瓜", "250g，切块蒸熟或买即食蒸南瓜"],
+          ["菠菜或油麦菜", "250g，洗净"],
+          ["梨或橙子", "1 个，放到早餐区"]
+        ],
+        meals: {
+          breakfast: ["南瓜鸡蛋牛奶", "蒸南瓜 200g + 鸡蛋 2 个 + 纯牛奶 250ml + 梨 1 个"],
+          lunch: ["去皮鸡腿南瓜饭", "鸡腿肉 150g + 南瓜 250g + 米饭 100g + 青菜 200g"],
+          dinner: ["番茄豆腐牛肉煲", "番茄 2 个 + 豆腐 200g + 牛肉 100g + 青菜 150g"]
+        },
+        swap: "食堂版选鸡腿去皮、米饭半碗、两份青菜；避开红油、干锅、香菇配菜。"
+      },
+      {
+        name: "低油咖喱鸡日",
+        scene: ["家常", "外卖可替换"],
+        kcal: 1740,
+        protein: 115,
+        prep: [
+          ["鸡胸或鸡腿肉", "150g，切块冷藏；咖喱只放少量"],
+          ["胡萝卜和土豆", "合计 250g，切块"],
+          ["西兰花", "200g，作为额外蔬菜"],
+          ["希腊酸奶", "150g，早餐或加餐"]
+        ],
+        meals: {
+          breakfast: ["希腊酸奶坚果碗", "希腊酸奶 200g + 燕麦 35g + 香蕉半根 + 坚果 10g，确认坚果耐受"],
+          lunch: ["低油咖喱鸡饭", "鸡肉 150g + 土豆胡萝卜 250g + 米饭 120g + 西兰花 200g"],
+          dinner: ["清汤鱼片米粉", "鱼片 150g + 米粉小碗 + 青菜 250g，汤不喝完"]
+        },
+        swap: "外卖咖喱容易油多，备注少油、饭少、加青菜；咖喱不适就换番茄炖鸡。"
+      },
+      {
+        name: "牛肉藜麦沙拉日",
+        scene: ["轻食", "便利店"],
+        kcal: 1620,
+        protein: 105,
+        prep: [
+          ["卤牛肉或牛排", "120g，买低油版本；不选辣味"],
+          ["藜麦饭或杂粮饭", "熟重 150g，可用即食包"],
+          ["生菜番茄黄瓜", "合计 300g，洗净沥干"],
+          ["鸡蛋", "2 个，提前水煮"]
+        ],
+        meals: {
+          breakfast: ["鸡蛋全麦贝果", "全麦贝果半个到 1 个 + 鸡蛋 2 个 + 无糖豆浆 300ml"],
+          lunch: ["牛肉藜麦沙拉", "牛肉 120g + 藜麦饭 150g + 生菜番茄黄瓜 300g，油醋汁半量"],
+          dinner: ["虾仁蒸蛋配红薯", "虾仁 120g + 鸡蛋 1 个蒸蛋 + 红薯 200g + 青菜 200g"]
+        },
+        swap: "轻食店酱料默认分装；如果没有藜麦，换玉米、红薯或糙米饭。"
+      },
+      {
+        name: "豆腐鸡肉拌饭日",
+        scene: ["宿舍微波", "食堂"],
+        kcal: 1660,
+        protein: 114,
+        prep: [
+          ["北豆腐", "200g，冷藏；晚餐用"],
+          ["即食鸡胸", "120g，午餐备用"],
+          ["米饭", "熟饭 150g，可买即食米饭"],
+          ["小番茄和黄瓜", "各 1 份，洗净"]
+        ],
+        meals: {
+          breakfast: ["红薯豆浆鸡蛋", "红薯 200g + 无糖豆浆 300ml + 鸡蛋 2 个"],
+          lunch: ["鸡肉蔬菜拌饭", "鸡胸 120g + 米饭 150g + 黄瓜番茄青菜 300g，低脂酱半量"],
+          dinner: ["番茄豆腐蛋花汤", "豆腐 200g + 鸡蛋 1 个 + 番茄 2 个 + 青菜 200g"]
+        },
+        swap: "食堂版选米饭半碗、鸡肉/鱼肉一份、两份不辣素菜；豆腐汤不喝油汤。"
+      },
+      {
+        name: "鸡肉意面日",
+        scene: ["家常", "外卖可替换"],
+        kcal: 1710,
+        protein: 109,
+        prep: [
+          ["鸡胸肉", "150g，冷藏解冻或买即食原味"],
+          ["全麦意面", "80g 干重"],
+          ["番茄和洋葱", "番茄 2 个，洋葱半个；不耐受洋葱可省略"],
+          ["生菜", "250g，晚餐做沙拉"]
+        ],
+        meals: {
+          breakfast: ["燕麦牛奶鸡蛋", "燕麦 50g + 牛奶 250ml + 鸡蛋 1 个 + 橙子 1 个"],
+          lunch: ["番茄鸡肉全麦意面", "鸡胸 150g + 全麦意面 80g + 番茄酱汁 + 青菜 200g"],
+          dinner: ["金枪鱼生菜饭团", "水浸金枪鱼 100g + 杂粮饭团 1 个 + 生菜 250g + 酸奶 100g"]
+        },
+        swap: "点外卖意面时避开奶油酱，优先番茄肉酱，要求少油、不要辣椒油。"
+      },
+      {
+        name: "鳕鱼玉米饭日",
+        scene: ["家常", "便利店"],
+        kcal: 1640,
+        protein: 106,
+        prep: [
+          ["鳕鱼或龙利鱼", "160g，冷藏解冻"],
+          ["玉米", "1 根，提前蒸熟也可以"],
+          ["娃娃菜", "250g，洗净"],
+          ["低糖高蛋白酸奶", "1 杯，早餐备用"]
+        ],
+        meals: {
+          breakfast: ["高蛋白酸奶玉米", "低糖高蛋白酸奶 1 杯 + 玉米 1 根 + 鸡蛋 1 个"],
+          lunch: ["清蒸鳕鱼玉米饭", "鳕鱼 160g + 米饭 120g + 玉米半根 + 娃娃菜 250g"],
+          dinner: ["牛肉荞麦冷拌碗", "卤牛肉 100g + 荞麦面 70g + 黄瓜番茄 250g，少酱"]
+        },
+        swap: "鱼类可换虾仁、鸡胸或豆腐；没有蒸鱼条件就买清蒸鱼/水煮鱼片不辣版。"
+      },
+      {
+        name: "瘦肉豆角饭日",
+        scene: ["家常", "食堂"],
+        kcal: 1690,
+        protein: 108,
+        prep: [
+          ["瘦猪肉或里脊", "130g，切片冷藏"],
+          ["豆角", "250g，洗净切段，必须做熟"],
+          ["紫薯", "200g，早餐蒸熟"],
+          ["无糖豆浆", "300ml，早餐备用"]
+        ],
+        meals: {
+          breakfast: ["紫薯豆浆鸡蛋", "紫薯 200g + 无糖豆浆 300ml + 鸡蛋 2 个"],
+          lunch: ["瘦肉豆角杂粮饭", "瘦肉 130g + 豆角 250g + 杂粮饭 150g，少油焖熟"],
+          dinner: ["鸡丝蔬菜汤面", "鸡丝 120g + 面条小碗 + 青菜 300g，清汤不辣"]
+        },
+        swap: "豆角一定熟透；食堂可换瘦肉炒青菜、米饭半碗、额外加一份清炒绿叶菜。"
+      },
+      {
+        name: "鸡蛋虾仁吐司日",
+        scene: ["便利店", "宿舍"],
+        kcal: 1600,
+        protein: 104,
+        prep: [
+          ["全麦吐司", "需要 2-3 片"],
+          ["虾仁或鸡胸", "虾仁 120g；不确定耐受就换鸡胸 120g"],
+          ["鸡蛋", "3 个，提前水煮 2 个"],
+          ["水果", "苹果/橙子/猕猴桃任选 1-2 份"]
+        ],
+        meals: {
+          breakfast: ["鸡蛋虾仁吐司", "全麦吐司 2 片 + 鸡蛋 1 个 + 虾仁 80g + 生菜番茄"],
+          lunch: ["便利店均衡组合", "鸡肉饭团 1 个 + 原味鸡胸 100g + 茶叶蛋 1 个 + 蔬菜沙拉酱半包"],
+          dinner: ["豆腐牛肉青菜锅", "豆腐 200g + 牛肉 100g + 青菜 300g + 米饭 100g"]
+        },
+        swap: "便利店组合优先看配料表，避开辣味、油炸、奶茶和高糖饮料。"
+      },
+      {
+        name: "鸡胸红薯轻食日",
+        scene: ["轻食", "家常"],
+        kcal: 1630,
+        protein: 113,
+        prep: [
+          ["鸡胸肉", "150g，原味或黑胡椒少盐版本"],
+          ["红薯", "250g，提前蒸熟"],
+          ["西兰花和胡萝卜", "合计 300g，切好"],
+          ["牛奶或豆浆", "250-300ml，早餐备用"]
+        ],
+        meals: {
+          breakfast: ["牛奶燕麦水果", "牛奶 250ml + 燕麦 45g + 苹果 1 个 + 鸡蛋 1 个"],
+          lunch: ["鸡胸红薯轻食盘", "鸡胸 150g + 红薯 250g + 西兰花胡萝卜 300g，油醋汁半量"],
+          dinner: ["番茄鸡蛋虾仁饭", "番茄 2 个 + 鸡蛋 1 个 + 虾仁 100g + 米饭 100g"]
+        },
+        swap: "轻食饭的坚果和酱料先半量；如果坚果不确定耐受，直接去掉。"
+      },
+      {
+        name: "牛肉豆腐米线日",
+        scene: ["外卖可替换", "食堂"],
+        kcal: 1720,
+        protein: 111,
+        prep: [
+          ["瘦牛肉", "120g，冷藏解冻；可买卤牛肉替代"],
+          ["豆腐", "150-200g，冷藏"],
+          ["米线或米粉", "小份，午餐用"],
+          ["绿叶菜", "300g，洗净或买净菜"]
+        ],
+        meals: {
+          breakfast: ["豆浆鸡蛋贝果", "无糖豆浆 300ml + 鸡蛋 2 个 + 全麦贝果半个 + 橙子 1 个"],
+          lunch: ["牛肉豆腐清汤米线", "牛肉 120g + 豆腐 150g + 米线小份 + 青菜 300g，不加辣油"],
+          dinner: ["鸡肉玉米沙拉饭", "鸡胸 120g + 玉米半根 + 米饭 100g + 生菜番茄 250g"]
+        },
+        swap: "点米线备注清汤、少油、不辣、不要香菇；汤底太油时只吃料和少量汤。"
+      },
+      {
+        name: "鳗鱼替代盖饭日",
+        scene: ["家常", "日式简餐"],
+        kcal: 1750,
+        protein: 107,
+        prep: [
+          ["鸡腿肉或鳗鱼替代蛋白", "鸡腿去皮 150g；鳗鱼饭酱汁重时减半"],
+          ["米饭", "熟饭 150g"],
+          ["海苔和黄瓜", "少量海苔，黄瓜 1 根"],
+          ["青菜", "250g，焯水或清炒少油"]
+        ],
+        meals: {
+          breakfast: ["酸奶水果燕麦", "无糖酸奶 250g + 燕麦 40g + 草莓/蓝莓 150g + 鸡蛋 1 个"],
+          lunch: ["低酱鸡腿盖饭", "去皮鸡腿 150g + 米饭 150g + 黄瓜海苔 + 青菜 250g，酱汁半量"],
+          dinner: ["鱼片豆腐蔬菜汤", "鱼片 150g + 豆腐 150g + 娃娃菜 250g + 红薯 150g"]
+        },
+        swap: "想吃日式简餐可以吃，但酱汁半量、饭不加大、额外加青菜；避开炸物定食。"
+      }
+    ];
+
+    const extraMealSeeds = {
+      breakfast: [
+        ["牛奶燕麦奇亚籽杯", "纯牛奶 250ml + 燕麦 45g + 奇亚籽 8g + 蓝莓 100g + 水煮蛋 1 个", [["纯牛奶", "250ml，选无糖或低脂"], ["燕麦和奇亚籽", "燕麦 45g，奇亚籽 8g，睡前泡好"], ["蓝莓", "100g，洗净冷藏"]], ["便利店", "免开火"], 500, 26, "奇亚籽不耐受就省略；水果可换草莓、苹果或橙子。"],
+        ["豆腐脑全麦组合", "无糖咸豆腐脑 1 碗 + 全麦馒头半个 + 鸡蛋 1 个 + 黄瓜 1 根", [["豆腐脑", "选无辣油、少卤汁版本"], ["全麦馒头", "半个到 1 个，按饥饿程度"], ["黄瓜", "1 根，洗净"]], ["食堂", "早餐铺"], 480, 28, "豆腐脑不要辣油；馒头可换玉米或红薯。"],
+        ["鸡胸玉米早餐沙拉", "原味鸡胸 80g + 玉米 1 根 + 生菜番茄 200g + 无糖酸奶 100g", [["原味鸡胸", "80g，避免辣味加工品"], ["玉米", "1 根，提前蒸熟"], ["生菜番茄", "合计 200g，洗净"]], ["便利店", "轻食"], 520, 32, "酱料半量；玉米可换全麦面包 2 片。"],
+        ["鸡蛋菠菜燕麦粥", "燕麦 45g + 鸡蛋 1 个 + 菠菜 150g + 牛奶 200ml，做成咸口粥", [["燕麦", "45g，原味"], ["菠菜", "150g，洗净焯水或微波"], ["鸡蛋", "1 个"]], ["宿舍微波", "家常"], 470, 24, "不想咸口就把菠菜换水果，鸡蛋单独吃。"],
+        ["紫薯酸奶水果盘", "紫薯 220g + 无糖酸奶 200g + 苹果半个 + 鸡蛋 1 个", [["紫薯", "220g，提前蒸熟"], ["无糖酸奶", "200g"], ["苹果", "半个到 1 个"]], ["免开火", "便利店"], 500, 23, "酸奶不耐受可换无糖豆浆 300ml。"],
+        ["牛肉生菜全麦卷", "卤牛肉 80g + 全麦卷饼 1 张 + 生菜番茄黄瓜 + 无糖豆浆 250ml", [["卤牛肉", "80g，选少酱少辣"], ["全麦卷饼", "1 张"], ["生菜番茄黄瓜", "合计 200g"]], ["便利店", "家常"], 540, 31, "卤牛肉太咸就减量，并多加蔬菜。"],
+        ["鸡蛋番茄荞麦面早餐", "荞麦面 60g + 鸡蛋 1 个 + 番茄 1 个 + 青菜 150g", [["荞麦面", "60g 干重"], ["番茄", "1 个"], ["青菜", "150g"]], ["家常", "热早餐"], 510, 25, "汤底清淡，少油不辣；面量可按活动量微调。"],
+        ["高蛋白豆浆麦片", "无糖豆浆 350ml + 原味麦片 45g + 鸡蛋 1 个 + 梨 1 个", [["无糖豆浆", "350ml"], ["原味麦片", "45g"], ["梨", "1 个"]], ["便利店", "免开火"], 490, 27, "麦片看配料表，避开高糖脆麦片。"],
+        ["鳕鱼土豆早餐碗", "鳕鱼/龙利鱼 100g + 小土豆 200g + 西兰花 150g", [["鳕鱼或龙利鱼", "100g，确认耐受"], ["小土豆", "200g，提前蒸熟"], ["西兰花", "150g"]], ["家常", "宿舍微波"], 520, 31, "鱼类不方便就换鸡胸或豆腐。"],
+        ["鸡蛋牛油果吐司", "全麦吐司 2 片 + 鸡蛋 1 个 + 牛油果半个 + 番茄", [["全麦吐司", "2 片"], ["牛油果", "半个"], ["番茄", "1 个"]], ["便利店", "轻食"], 530, 22, "牛油果脂肪较高，半个即可；可换低脂奶酪 1 片。"],
+        ["虾仁蒸蛋早餐", "虾仁 80g + 鸡蛋 1 个蒸蛋 + 玉米半根 + 小番茄 150g", [["虾仁", "80g，确认耐受"], ["鸡蛋", "1 个"], ["小番茄", "150g"]], ["家常", "宿舍微波"], 480, 30, "虾仁不确定耐受就换鸡胸或豆腐。"],
+        ["红豆燕麦牛奶碗", "无糖红豆 80g + 燕麦 40g + 牛奶 250ml + 鸡蛋 1 个", [["无糖红豆", "80g，提前煮熟或买无糖款"], ["燕麦", "40g"], ["牛奶", "250ml"]], ["家常", "免开火"], 520, 27, "红豆不加糖；也可换黑豆或鹰嘴豆少量。"],
+        ["鸡丝青菜小馄饨", "小馄饨 8-10 个 + 鸡丝 80g + 青菜 200g，清汤", [["小馄饨", "8-10 个，选清淡馅"], ["鸡丝", "80g"], ["青菜", "200g"]], ["早餐铺", "食堂"], 540, 29, "汤不喝完，避开辣油和重盐汤底。"],
+        ["豆腐鸡蛋三明治", "全麦面包 2 片 + 煎/蒸蛋 1 个 + 北豆腐 100g + 生菜", [["全麦面包", "2 片"], ["北豆腐", "100g"], ["生菜", "1 份"]], ["家常", "便利店"], 500, 28, "用少量黑胡椒或番茄调味，不用蛋黄酱。"],
+        ["藜麦酸奶早餐杯", "熟藜麦 100g + 无糖酸奶 200g + 草莓 150g + 鸡蛋 1 个", [["熟藜麦", "100g，可用即食包"], ["无糖酸奶", "200g"], ["草莓", "150g"]], ["轻食", "免开火"], 510, 25, "藜麦可换燕麦或杂粮饭少量。"],
+        ["山药鸡蛋豆浆", "蒸山药 220g + 鸡蛋 2 个 + 无糖豆浆 300ml", [["山药", "220g，提前蒸熟"], ["鸡蛋", "2 个"], ["无糖豆浆", "300ml"]], ["家常", "便利店"], 500, 29, "山药处理时注意手痒；可买熟山药。"],
+        ["燕麦鸡胸咸粥", "燕麦 45g + 鸡胸 80g + 胡萝卜丁 + 青菜，清淡咸粥", [["燕麦", "45g"], ["鸡胸", "80g，撕成丝"], ["胡萝卜和青菜", "合计 200g"]], ["宿舍微波", "家常"], 500, 31, "口味清淡，少盐；鸡胸可换牛肉丝。"],
+        ["全麦鸡蛋蔬菜饼", "全麦饼 1 张 + 鸡蛋 1 个 + 生菜黄瓜番茄 + 牛奶 250ml", [["全麦饼", "1 张"], ["鸡蛋", "1 个"], ["生菜黄瓜番茄", "合计 250g"]], ["家常", "便利店"], 530, 25, "不用甜酱和辣酱；可加少量低脂奶酪。"],
+        ["黑米粥鸡蛋组合", "黑米粥 300ml + 鸡蛋 2 个 + 原味鸡胸 50g + 橙子 1 个", [["黑米粥", "300ml，不加糖"], ["鸡蛋", "2 个"], ["橙子", "1 个"]], ["食堂", "早餐铺"], 520, 30, "粥类饱腹感较弱，蛋白质要补足。"],
+        ["鹰嘴豆鸡蛋碗", "鹰嘴豆 80g + 鸡蛋 1 个 + 玉米半根 + 黄瓜番茄 250g", [["鹰嘴豆", "80g，提前煮熟或买即食"], ["鸡蛋", "1 个"], ["黄瓜番茄", "250g"]], ["轻食", "免开火"], 520, 27, "鹰嘴豆容易胀气时减半或换红薯。"],
+        ["牛奶香蕉花生粉燕麦", "牛奶 250ml + 燕麦 45g + 香蕉半根 + 花生粉 8g + 鸡蛋 1 个", [["牛奶", "250ml"], ["燕麦", "45g"], ["花生粉", "8g，确认不过敏"]], ["免开火", "便利店"], 530, 27, "坚果类不确定耐受就去掉花生粉。"],
+        ["鸡胸小米粥", "小米粥 300ml + 鸡胸 80g + 鸡蛋 1 个 + 凉拌黄瓜不辣", [["小米粥", "300ml"], ["鸡胸", "80g"], ["黄瓜", "1 根"]], ["食堂", "早餐铺"], 510, 30, "凉菜不要辣椒油，粥不加糖。"],
+        ["豆浆红薯水果盒", "无糖豆浆 350ml + 红薯 220g + 猕猴桃 1 个 + 鸡蛋 1 个", [["无糖豆浆", "350ml"], ["红薯", "220g"], ["猕猴桃", "1 个"]], ["便利店", "免开火"], 500, 24, "猕猴桃刺激胃时换苹果或梨。"],
+        ["番茄牛肉早餐汤", "瘦牛肉 90g + 番茄 1 个 + 青菜 200g + 米饭 80g", [["瘦牛肉", "90g"], ["番茄", "1 个"], ["青菜", "200g"]], ["家常", "热早餐"], 520, 32, "早上没时间可把牛肉提前煮熟冷藏。"],
+        ["低糖奶酪吐司盘", "全麦吐司 2 片 + 低脂奶酪 1 片 + 鸡蛋 1 个 + 番茄黄瓜", [["全麦吐司", "2 片"], ["低脂奶酪", "1 片"], ["番茄黄瓜", "合计 250g"]], ["便利店", "免开火"], 500, 26, "奶酪选低脂低盐；不耐受乳制品就换鸡胸。"],
+        ["玉米豆腐鸡蛋碗", "玉米 1 根 + 内酯豆腐 150g + 鸡蛋 1 个 + 小番茄 150g", [["玉米", "1 根"], ["内酯豆腐", "150g"], ["小番茄", "150g"]], ["便利店", "宿舍"], 490, 25, "内酯豆腐调味少放酱油，不加辣油。"]
+      ],
+      lunch: [
+        ["清蒸鱼杂粮饭", "清蒸鱼 170g + 杂粮饭 150g + 西兰花 200g + 冬瓜汤", [["鱼肉", "170g，确认耐受"], ["杂粮饭", "熟重 150g"], ["西兰花", "200g"]], ["食堂", "家常"], 680, 45, "清蒸优先，避开红烧厚芡和辣油。"],
+        ["鸡胸藜麦彩蔬碗", "鸡胸 150g + 藜麦饭 150g + 彩椒黄瓜生菜 300g", [["鸡胸", "150g"], ["藜麦饭", "150g"], ["彩椒黄瓜生菜", "300g"]], ["轻食", "便利店"], 650, 46, "酱汁半量，坚果可省略。"],
+        ["番茄豆腐牛肉饭", "瘦牛肉 120g + 豆腐 150g + 番茄 2 个 + 米饭 130g", [["瘦牛肉", "120g"], ["豆腐", "150g"], ["番茄", "2 个"]], ["家常", "外卖可替换"], 690, 44, "少油炖煮；外卖备注不要辣椒和香菇。"],
+        ["虾仁西兰花糙米饭", "虾仁 170g + 西兰花 250g + 糙米饭 150g", [["虾仁", "170g，确认耐受"], ["西兰花", "250g"], ["糙米饭", "150g"]], ["家常", "宿舍微波"], 660, 47, "虾仁可换鸡胸或鳕鱼；少油快炒。"],
+        ["去皮鸡腿青菜饭", "去皮鸡腿肉 160g + 米饭 130g + 油麦菜 250g + 番茄", [["去皮鸡腿肉", "160g"], ["米饭", "130g"], ["油麦菜", "250g"]], ["食堂", "家常"], 700, 43, "鸡腿去皮，菜汤少拌饭。"],
+        ["牛肉土豆胡萝卜饭", "瘦牛肉 130g + 土豆 180g + 胡萝卜 100g + 青菜 200g", [["瘦牛肉", "130g"], ["土豆胡萝卜", "合计 280g"], ["青菜", "200g"]], ["家常", "食堂"], 700, 42, "土豆已算主食，米饭减到小半碗。"],
+        ["鸡蛋豆腐蔬菜盖饭", "鸡蛋 2 个 + 豆腐 180g + 青菜 250g + 米饭 120g", [["鸡蛋", "2 个"], ["豆腐", "180g"], ["青菜", "250g"]], ["食堂", "宿舍微波"], 640, 36, "适合不想吃肉的一餐；注意少油。"],
+        ["鸡丝荞麦冷面", "鸡丝 140g + 荞麦面 80g + 黄瓜胡萝卜 250g + 酱汁半量", [["鸡胸", "140g"], ["荞麦面", "80g 干重"], ["黄瓜胡萝卜", "250g"]], ["家常", "外卖可替换"], 660, 42, "冷面不要辣油和甜口重酱。"],
+        ["金枪鱼玉米饭团组合", "水浸金枪鱼 100g + 饭团 1 个 + 鸡蛋 1 个 + 蔬菜沙拉", [["水浸金枪鱼", "100g"], ["饭团", "1 个"], ["蔬菜沙拉", "1 份"]], ["便利店", "免开火"], 650, 40, "饭团选非油炸馅；沙拉酱半包。"],
+        ["鳕鱼南瓜青菜饭", "鳕鱼 170g + 南瓜 250g + 青菜 250g + 米饭 80g", [["鳕鱼", "170g"], ["南瓜", "250g"], ["青菜", "250g"]], ["家常", "轻食"], 650, 42, "南瓜多时米饭少一点。"],
+        ["鸡胸鹰嘴豆沙拉", "鸡胸 150g + 鹰嘴豆 80g + 生菜番茄黄瓜 350g + 全麦面包 1 片", [["鸡胸", "150g"], ["鹰嘴豆", "80g"], ["生菜番茄黄瓜", "350g"]], ["轻食", "便利店"], 670, 46, "鹰嘴豆胀气就换玉米或红薯。"],
+        ["番茄鸡蛋牛肉面", "瘦牛肉 100g + 鸡蛋 1 个 + 番茄 2 个 + 面条小份 + 青菜", [["瘦牛肉", "100g"], ["鸡蛋", "1 个"], ["番茄和青菜", "合计 350g"]], ["家常", "面馆"], 690, 42, "汤面选清汤，面量小份，额外加青菜。"],
+        ["豆腐鱼片蔬菜汤饭", "鱼片 160g + 豆腐 150g + 娃娃菜 250g + 米饭 120g", [["鱼片", "160g"], ["豆腐", "150g"], ["娃娃菜", "250g"]], ["家常", "外卖可替换"], 660, 45, "汤底清淡，不喝油汤。"],
+        ["牛肉全麦卷轻食", "牛肉 120g + 全麦卷饼 1 张 + 生菜番茄黄瓜 300g + 酸奶 100g", [["牛肉", "120g"], ["全麦卷饼", "1 张"], ["生菜番茄黄瓜", "300g"]], ["便利店", "轻食"], 660, 40, "酱料半量；卷饼不要炸鸡版本。"],
+        ["鸡肉玉米蔬菜粥", "鸡肉 140g + 玉米半根 + 杂粮粥 300ml + 青菜 250g", [["鸡肉", "140g"], ["玉米", "半根"], ["青菜", "250g"]], ["食堂", "家常"], 650, 41, "粥不加糖，蛋白质要足。"],
+        ["瘦肉冬瓜海带饭", "瘦肉 130g + 冬瓜海带 300g + 米饭 150g", [["瘦肉", "130g"], ["冬瓜海带", "300g"], ["米饭", "150g"]], ["食堂", "家常"], 660, 39, "海带高碘，别天天吃；汤别太咸。"],
+        ["虾仁番茄意面", "虾仁 160g + 全麦意面 80g + 番茄 2 个 + 生菜沙拉", [["虾仁", "160g，确认耐受"], ["全麦意面", "80g"], ["番茄", "2 个"]], ["家常", "外卖可替换"], 690, 45, "避开奶油酱；番茄酱汁少油。"],
+        ["鸡胸红薯西兰花盘", "鸡胸 150g + 红薯 250g + 西兰花 250g", [["鸡胸", "150g"], ["红薯", "250g"], ["西兰花", "250g"]], ["轻食", "便利店"], 650, 44, "轻食店酱汁半量，不额外加培根。"],
+        ["牛肉豆腐生菜拌饭", "牛肉 120g + 豆腐 150g + 生菜黄瓜 250g + 米饭 130g", [["牛肉", "120g"], ["豆腐", "150g"], ["生菜黄瓜", "250g"]], ["宿舍", "家常"], 680, 43, "用少量低钠酱油，不放辣椒油。"],
+        ["鸡蛋虾仁炒饭轻油版", "虾仁 120g + 鸡蛋 1 个 + 米饭 150g + 豌豆胡萝卜青菜 250g", [["虾仁", "120g"], ["鸡蛋", "1 个"], ["混合蔬菜", "250g"]], ["家常", "食堂"], 700, 41, "炒饭少油，最好搭配一份清汤青菜。"],
+        ["青椒牛柳杂粮饭", "牛柳 130g + 彩椒 200g + 杂粮饭 150g + 凉拌黄瓜不辣", [["牛柳", "130g"], ["彩椒", "200g"], ["杂粮饭", "150g"]], ["食堂", "家常"], 700, 42, "青椒可换彩椒，避免辣椒刺激。"],
+        ["鸡肉蘑菇替代菜饭", "鸡肉 150g + 西葫芦/花菜 250g + 米饭 130g，不用香菇", [["鸡肉", "150g"], ["西葫芦或花菜", "250g"], ["米饭", "130g"]], ["家常", "外卖可替换"], 660, 43, "所有菌菇类不确定时直接换花菜或西葫芦。"],
+        ["白灼虾蔬菜饭", "白灼虾 180g + 米饭 130g + 生菜/菜心 300g", [["白灼虾", "180g，确认耐受"], ["米饭", "130g"], ["生菜或菜心", "300g"]], ["食堂", "家常"], 660, 46, "蘸料少量，不放辣椒酱。"],
+        ["牛肉番茄土豆汤", "牛肉 130g + 番茄 2 个 + 土豆 200g + 青菜 200g", [["牛肉", "130g"], ["番茄", "2 个"], ["土豆和青菜", "合计 400g"]], ["家常", "热餐"], 690, 42, "土豆当主食，米饭可省。"],
+        ["鸡胸紫薯沙拉", "鸡胸 150g + 紫薯 220g + 生菜番茄黄瓜 300g", [["鸡胸", "150g"], ["紫薯", "220g"], ["生菜番茄黄瓜", "300g"]], ["轻食", "便利店"], 640, 43, "酱汁半量，紫薯可换玉米。"],
+        ["豆腐瘦肉白菜饭", "豆腐 180g + 瘦肉 100g + 白菜 300g + 米饭 120g", [["豆腐", "180g"], ["瘦肉", "100g"], ["白菜", "300g"]], ["家常", "食堂"], 650, 39, "白菜豆腐清炖，少油少盐。"],
+        ["鸡肉藜麦南瓜碗", "鸡胸 140g + 藜麦饭 120g + 南瓜 180g + 青菜 200g", [["鸡胸", "140g"], ["藜麦饭", "120g"], ["南瓜和青菜", "380g"]], ["轻食", "家常"], 670, 42, "南瓜和藜麦都算主食，别再加面包。"],
+        ["清汤牛肉米粉", "牛肉 130g + 米粉小份 + 青菜 300g + 鸡蛋 1 个", [["牛肉", "130g"], ["米粉", "小份"], ["青菜", "300g"]], ["外卖可替换", "食堂"], 690, 43, "备注清汤、少油、不辣、不要香菇。"],
+        ["三色蔬菜鸡蛋豆腐饭", "鸡蛋 1 个 + 豆腐 200g + 胡萝卜西兰花玉米 300g + 米饭 100g", [["豆腐", "200g"], ["鸡蛋", "1 个"], ["三色蔬菜", "300g"]], ["宿舍微波", "家常"], 640, 36, "偏素的一餐，下午饿可加酸奶。"],
+        ["鸡肉芋头青菜碗", "鸡肉 150g + 芋头 220g + 青菜 250g", [["鸡肉", "150g"], ["芋头", "220g"], ["青菜", "250g"]], ["家常", "食堂"], 670, 42, "芋头当主食，米饭减量或不吃。"],
+        ["低油照烧鸡饭", "鸡腿去皮 150g + 米饭 130g + 西兰花胡萝卜 300g，照烧汁半量", [["去皮鸡腿", "150g"], ["米饭", "130g"], ["西兰花胡萝卜", "300g"]], ["日式简餐", "家常"], 700, 42, "照烧汁偏甜偏咸，半量即可。"],
+        ["水煮蛋牛肉沙拉饭", "牛肉 120g + 水煮蛋 1 个 + 杂粮饭 120g + 生菜 300g", [["牛肉", "120g"], ["水煮蛋", "1 个"], ["生菜", "300g"]], ["轻食", "便利店"], 680, 43, "酱汁分装，别选凯撒培根款。"],
+        ["鸡胸番茄鹰嘴豆饭", "鸡胸 140g + 鹰嘴豆 80g + 番茄 2 个 + 米饭 100g", [["鸡胸", "140g"], ["鹰嘴豆", "80g"], ["番茄", "2 个"]], ["家常", "轻食"], 680, 45, "鹰嘴豆不耐受就换豆腐。"],
+        ["鳕鱼豆苗糙米饭", "鳕鱼 170g + 豆苗 250g + 糙米饭 150g", [["鳕鱼", "170g"], ["豆苗", "250g"], ["糙米饭", "150g"]], ["家常", "食堂"], 660, 42, "豆苗可换任意绿叶菜。"],
+        ["瘦肉蒸蛋蔬菜饭", "瘦肉 100g + 蒸蛋 1 份 + 青菜 250g + 米饭 130g", [["瘦肉", "100g"], ["鸡蛋", "1-2 个做蒸蛋"], ["青菜", "250g"]], ["食堂", "家常"], 680, 40, "蒸蛋少酱油，肉菜少油。"],
+        ["鸡肉玉米番茄饭", "鸡肉 150g + 玉米半根 + 番茄 2 个 + 米饭 120g + 青菜", [["鸡肉", "150g"], ["玉米", "半根"], ["番茄和青菜", "350g"]], ["家常", "宿舍"], 670, 43, "番茄多放，油少放。"]
+      ],
+      dinner: [
+        ["豆腐番茄鱼片汤", "豆腐 180g + 鱼片 150g + 番茄 2 个 + 青菜 250g", [["豆腐", "180g"], ["鱼片", "150g，确认耐受"], ["番茄和青菜", "400g"]], ["家常", "清淡晚餐"], 560, 39, "晚餐少主食，饿可加红薯 100g。"],
+        ["鸡胸蔬菜红薯盘", "鸡胸 130g + 红薯 180g + 西兰花胡萝卜 300g", [["鸡胸", "130g"], ["红薯", "180g"], ["西兰花胡萝卜", "300g"]], ["轻食", "便利店"], 590, 39, "酱汁半量，红薯不要再配米饭。"],
+        ["牛肉白菜豆腐锅", "牛肉 100g + 豆腐 180g + 白菜 300g + 米饭 80g", [["牛肉", "100g"], ["豆腐", "180g"], ["白菜", "300g"]], ["家常", "宿舍"], 590, 37, "清汤锅，不放辣锅底。"],
+        ["虾仁蒸蛋青菜", "虾仁 120g + 鸡蛋 1 个 + 青菜 300g + 玉米半根", [["虾仁", "120g，确认耐受"], ["鸡蛋", "1 个"], ["青菜", "300g"]], ["家常", "宿舍微波"], 570, 38, "虾仁可换鸡胸丝；蒸蛋少酱油。"],
+        ["鸡丝冬瓜汤饭", "鸡丝 120g + 冬瓜 300g + 米饭 90g + 青菜 150g", [["鸡丝", "120g"], ["冬瓜", "300g"], ["米饭", "90g"]], ["食堂", "家常"], 560, 35, "汤淡一点，别喝油汤。"],
+        ["金枪鱼豆腐沙拉", "水浸金枪鱼 100g + 豆腐 150g + 生菜黄瓜番茄 350g", [["水浸金枪鱼", "100g"], ["豆腐", "150g"], ["生菜黄瓜番茄", "350g"]], ["便利店", "免开火"], 540, 38, "金枪鱼别天天吃；酱汁半量。"],
+        ["番茄鸡蛋荞麦面", "鸡蛋 1 个 + 番茄 2 个 + 荞麦面 60g + 青菜 250g", [["鸡蛋", "1 个"], ["番茄", "2 个"], ["荞麦面和青菜", "60g + 250g"]], ["家常", "热晚餐"], 570, 27, "蛋白偏低时加豆腐 100g。"],
+        ["鳕鱼南瓜青菜汤", "鳕鱼 150g + 南瓜 180g + 青菜 300g", [["鳕鱼", "150g"], ["南瓜", "180g"], ["青菜", "300g"]], ["家常", "清淡晚餐"], 550, 35, "南瓜当主食，别再加饭。"],
+        ["瘦肉豆腐白菜汤", "瘦肉 100g + 豆腐 180g + 白菜 300g + 红薯 100g", [["瘦肉", "100g"], ["豆腐", "180g"], ["白菜", "300g"]], ["家常", "食堂"], 580, 36, "清炖少油；白菜可换娃娃菜。"],
+        ["鸡胸玉米蔬菜汤", "鸡胸 120g + 玉米半根 + 西兰花 200g + 番茄 1 个", [["鸡胸", "120g"], ["玉米", "半根"], ["西兰花番茄", "300g"]], ["宿舍微波", "家常"], 570, 38, "玉米当主食，汤不加浓汤宝。"],
+        ["牛肉生菜全麦卷晚餐", "卤牛肉 100g + 全麦卷饼 1 张 + 生菜黄瓜番茄 300g", [["卤牛肉", "100g"], ["全麦卷饼", "1 张"], ["生菜黄瓜番茄", "300g"]], ["便利店", "免开火"], 590, 35, "酱料半量，卤牛肉太咸就少吃。"],
+        ["虾仁豆腐青菜锅", "虾仁 120g + 豆腐 180g + 青菜 300g + 米饭 80g", [["虾仁", "120g"], ["豆腐", "180g"], ["青菜", "300g"]], ["家常", "外卖可替换"], 590, 41, "确认虾仁耐受；不耐受换鸡肉。"],
+        ["鸡肉黄瓜凉拌荞麦", "鸡胸 120g + 荞麦面 60g + 黄瓜胡萝卜 300g", [["鸡胸", "120g"], ["荞麦面", "60g"], ["黄瓜胡萝卜", "300g"]], ["家常", "夏季晚餐"], 580, 36, "凉拌汁少油少糖，不加辣椒油。"],
+        ["豆腐鸡蛋青菜汤", "豆腐 200g + 鸡蛋 1 个 + 青菜 300g + 紫薯 100g", [["豆腐", "200g"], ["鸡蛋", "1 个"], ["青菜", "300g"]], ["宿舍微波", "家常"], 570, 32, "偏素清淡，运动日可加鸡胸 50g。"],
+        ["牛肉番茄娃娃菜", "牛肉 110g + 番茄 2 个 + 娃娃菜 300g + 米饭 80g", [["牛肉", "110g"], ["番茄", "2 个"], ["娃娃菜", "300g"]], ["家常", "食堂"], 590, 36, "番茄增加味道，少用油盐。"],
+        ["鸡胸藜麦小沙拉", "鸡胸 120g + 藜麦饭 100g + 生菜番茄黄瓜 350g", [["鸡胸", "120g"], ["藜麦饭", "100g"], ["生菜番茄黄瓜", "350g"]], ["轻食", "便利店"], 580, 37, "晚餐饭量小一点，酱汁半量。"],
+        ["鱼片冬瓜豆腐汤", "鱼片 150g + 冬瓜 300g + 豆腐 150g", [["鱼片", "150g"], ["冬瓜", "300g"], ["豆腐", "150g"]], ["家常", "清淡晚餐"], 540, 39, "鱼类可换鸡肉；汤底不放辣。"],
+        ["鸡蛋牛肉蔬菜粥", "牛肉 90g + 鸡蛋 1 个 + 杂粮粥 250ml + 青菜 250g", [["牛肉", "90g"], ["鸡蛋", "1 个"], ["青菜", "250g"]], ["食堂", "家常"], 570, 34, "粥量别过大，蛋白质要足。"],
+        ["红薯鸡肉生菜盘", "红薯 180g + 鸡肉 130g + 生菜番茄黄瓜 350g", [["红薯", "180g"], ["鸡肉", "130g"], ["生菜番茄黄瓜", "350g"]], ["轻食", "免开火"], 580, 38, "可买即食鸡胸和袋装沙拉。"],
+        ["豆腐牛肉海带汤", "豆腐 180g + 牛肉 100g + 海带冬瓜 250g + 米饭 80g", [["豆腐", "180g"], ["牛肉", "100g"], ["海带冬瓜", "250g"]], ["家常", "食堂"], 590, 36, "海带别天天吃，汤不要太咸。"],
+        ["虾仁玉米青菜碗", "虾仁 130g + 玉米半根 + 青菜 300g + 米饭 80g", [["虾仁", "130g"], ["玉米", "半根"], ["青菜", "300g"]], ["家常", "宿舍微波"], 580, 38, "虾仁可换鱼片或鸡胸。"],
+        ["鸡胸番茄豆腐煲", "鸡胸 120g + 豆腐 180g + 番茄 2 个 + 青菜 200g", [["鸡胸", "120g"], ["豆腐", "180g"], ["番茄青菜", "400g"]], ["家常", "外卖可替换"], 590, 42, "番茄汤底，不放辣酱。"],
+        ["牛肉西兰花小饭", "牛肉 110g + 西兰花 300g + 米饭 90g", [["牛肉", "110g"], ["西兰花", "300g"], ["米饭", "90g"]], ["食堂", "家常"], 590, 35, "食堂版少夹菜油，米饭小半碗。"],
+        ["鸡蛋豆腐番茄面", "鸡蛋 1 个 + 豆腐 150g + 番茄 2 个 + 面条小份 + 青菜", [["鸡蛋", "1 个"], ["豆腐", "150g"], ["番茄和青菜", "400g"]], ["家常", "面馆"], 590, 33, "面条小份，汤底清淡。"],
+        ["鳕鱼红薯蔬菜盘", "鳕鱼 150g + 红薯 180g + 胡萝卜西兰花 300g", [["鳕鱼", "150g"], ["红薯", "180g"], ["胡萝卜西兰花", "300g"]], ["轻食", "家常"], 580, 35, "鱼类不方便就换鸡胸。"],
+        ["瘦肉白菜粉丝少量", "瘦肉 100g + 白菜 300g + 粉丝小把 + 豆腐 100g", [["瘦肉", "100g"], ["白菜", "300g"], ["豆腐", "100g"]], ["家常", "食堂"], 580, 34, "粉丝别多，汤不喝完。"],
+        ["鸡胸蘑菇替代青菜锅", "鸡胸 120g + 花菜/西葫芦 300g + 豆腐 100g，不用香菇", [["鸡胸", "120g"], ["花菜或西葫芦", "300g"], ["豆腐", "100g"]], ["家常", "清淡晚餐"], 560, 39, "需要菌菇口感时用花菜替代，不碰香菇。"],
+        ["豆腐鹰嘴豆沙拉", "豆腐 180g + 鹰嘴豆 60g + 生菜番茄黄瓜 350g", [["豆腐", "180g"], ["鹰嘴豆", "60g"], ["生菜番茄黄瓜", "350g"]], ["轻食", "免开火"], 560, 31, "鹰嘴豆胀气就换鸡蛋 1 个。"],
+        ["牛肉南瓜青菜汤", "牛肉 100g + 南瓜 180g + 青菜 300g", [["牛肉", "100g"], ["南瓜", "180g"], ["青菜", "300g"]], ["家常", "食堂"], 570, 34, "南瓜当主食，汤底少油。"],
+        ["鸡肉小米青菜粥", "鸡肉 120g + 小米粥 250ml + 青菜 250g + 鸡蛋 1 个", [["鸡肉", "120g"], ["小米粥", "250ml"], ["青菜", "250g"]], ["食堂", "家常"], 590, 38, "粥不加糖，鸡蛋补蛋白。"],
+        ["鱼片番茄荞麦汤", "鱼片 140g + 番茄 2 个 + 荞麦面 50g + 青菜 250g", [["鱼片", "140g"], ["番茄", "2 个"], ["荞麦面和青菜", "50g + 250g"]], ["家常", "热晚餐"], 580, 37, "面量小份；鱼可换鸡胸。"],
+        ["鸡胸土豆青菜盘", "鸡胸 120g + 小土豆 180g + 青菜 300g", [["鸡胸", "120g"], ["小土豆", "180g"], ["青菜", "300g"]], ["轻食", "便利店"], 570, 36, "土豆当主食，别再加米饭。"],
+        ["豆腐虾仁冬瓜汤", "豆腐 180g + 虾仁 100g + 冬瓜 300g", [["豆腐", "180g"], ["虾仁", "100g"], ["冬瓜", "300g"]], ["家常", "宿舍微波"], 540, 37, "虾仁确认耐受；少盐。"],
+        ["牛肉鸡蛋生菜碗", "牛肉 100g + 鸡蛋 1 个 + 生菜番茄黄瓜 350g + 米饭 80g", [["牛肉", "100g"], ["鸡蛋", "1 个"], ["生菜番茄黄瓜", "350g"]], ["便利店", "轻食"], 590, 38, "饭量小一点，酱汁半量。"],
+        ["鸡肉玉米豆腐汤", "鸡肉 110g + 豆腐 150g + 玉米半根 + 青菜 250g", [["鸡肉", "110g"], ["豆腐", "150g"], ["玉米和青菜", "半根 + 250g"]], ["家常", "清淡晚餐"], 580, 39, "玉米提供主食，汤不放辣。"],
+        ["番茄牛肉藜麦碗", "牛肉 100g + 藜麦饭 90g + 番茄 2 个 + 生菜 250g", [["牛肉", "100g"], ["藜麦饭", "90g"], ["番茄生菜", "350g"]], ["轻食", "家常"], 590, 35, "藜麦可换糙米饭少量。"],
+        ["鸡蛋青菜豆腐饭", "鸡蛋 1 个 + 豆腐 200g + 青菜 300g + 米饭 80g", [["鸡蛋", "1 个"], ["豆腐", "200g"], ["青菜", "300g"]], ["食堂", "宿舍"], 560, 31, "偏素晚餐，运动后可加鸡胸 50g。"]
+      ]
+    };
+
+    const extraMeals = Object.fromEntries(
+      Object.entries(extraMealSeeds).map(([type, rows]) => [
+        type,
+        rows.map(([name, brief, prep, scene, kcal, protein, swap], i) => ({
+          id: `${type}-extra-${i}`,
+          type,
+          label: type === "breakfast" ? "早餐" : type === "lunch" ? "午餐" : "晚餐",
+          sourceIndex: plans.length + i,
+          name,
+          brief,
+          prep,
+          scene,
+          kcal,
+          protein,
+          swap
+        }))
+      ])
+    );
+
+    const mealPools = {
+      breakfast: [...plans.map((plan, index) => makeMealOption("breakfast", "早餐", plan, index, 0.3)), ...extraMeals.breakfast],
+      lunch: [...plans.map((plan, index) => makeMealOption("lunch", "午餐", plan, index, 0.4)), ...extraMeals.lunch],
+      dinner: [...plans.map((plan, index) => makeMealOption("dinner", "晚餐", plan, index, 0.3)), ...extraMeals.dinner]
+    };
+
+    const mealPoolList = [
+      ...mealPools.breakfast,
+      ...mealPools.lunch,
+      ...mealPools.dinner
+    ];
+
+    const state = {
+      activeTab: "today",
+      settings: loadSettings(),
+      search: ""
+    };
+
+    const els = {
+      dateLine: document.getElementById("dateLine"),
+      prepTitle: document.getElementById("prepTitle"),
+      mealTitle: document.getElementById("mealTitle"),
+      dayIndex: document.getElementById("dayIndex"),
+      prepCount: document.getElementById("prepCount"),
+      prepList: document.getElementById("prepList"),
+      mealGrid: document.getElementById("mealGrid"),
+      metrics: document.getElementById("metrics"),
+      swapBox: document.getElementById("swapBox"),
+      recipeList: document.getElementById("recipeList"),
+      recipeCount: document.getElementById("recipeCount"),
+      searchBox: document.getElementById("searchBox"),
+      shoppingTitle: document.getElementById("shoppingTitle"),
+      shoppingCount: document.getElementById("shoppingCount"),
+      shoppingGrid: document.getElementById("shoppingGrid"),
+      cycleStart: document.getElementById("cycleStart"),
+      goalText: document.getElementById("goalText"),
+      avoidText: document.getElementById("avoidText"),
+      modeText: document.getElementById("modeText"),
+      recipeModal: document.getElementById("recipeModal"),
+      modalMealType: document.getElementById("modalMealType"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalSubtitle: document.getElementById("modalSubtitle"),
+      modalBody: document.getElementById("modalBody")
+    };
+
+    function loadSettings() {
+      try {
+        return { ...initialSettings, ...JSON.parse(localStorage.getItem("nutritionPrep.settings") || "{}") };
+      } catch {
+        return { ...initialSettings };
+      }
+    }
+
+    function saveSettings() {
+      localStorage.setItem("nutritionPrep.settings", JSON.stringify(state.settings));
+    }
+
+    function todayLocal() {
+      const d = new Date();
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
+    function parseLocalDate(value) {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function isoDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
+    }
+
+    function addDays(date, n) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+
+    function mod(n, m) {
+      return ((n % m) + m) % m;
+    }
+
+    function makeMealOption(type, label, plan, sourceIndex, ratio) {
+      const meal = plan.meals[type];
+      return {
+        id: `${type}-${sourceIndex}`,
+        type,
+        label,
+        sourceIndex,
+        name: meal[0],
+        brief: meal[1],
+        scene: plan.scene,
+        prep: plan.prep,
+        swap: plan.swap,
+        kcal: Math.round(plan.kcal * ratio),
+        protein: Math.round(plan.protein * ratio)
+      };
+    }
+
+    function hashString(text) {
+      let hash = 2166136261;
+      for (let i = 0; i < text.length; i++) {
+        hash ^= text.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    }
+
+    function seededRandom(seed) {
+      let value = seed >>> 0;
+      return () => {
+        value += 0x6D2B79F5;
+        let t = value;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function pickIndex(rand, size) {
+      return Math.floor(rand() * size);
+    }
+
+    function drawKey(date) {
+      return `nutritionPrep.draw.${isoDate(date)}`;
+    }
+
+    function defaultDraw(date) {
+      const rand = seededRandom(hashString(`${isoDate(date)}|${state.settings.cycleStart}|nutrition-lottery`));
+      const breakfast = pickIndex(rand, mealPools.breakfast.length);
+      const lunch = pickIndex(rand, mealPools.lunch.length);
+      let dinner = pickIndex(rand, mealPools.dinner.length);
+      if (dinner === lunch) dinner = mod(dinner + 1 + pickIndex(rand, mealPools.dinner.length - 1), mealPools.dinner.length);
+      return { breakfast, lunch, dinner, mode: "date" };
+    }
+
+    function savedDraw(date) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(drawKey(date)) || "null");
+        if (!saved) return null;
+        if ([saved.breakfast, saved.lunch, saved.dinner].every(Number.isInteger)) return saved;
+      } catch {}
+      return null;
+    }
+
+    function randomDraw(date) {
+      const rand = seededRandom(hashString(`${isoDate(date)}|${Date.now()}|${Math.random()}`));
+      const breakfast = pickIndex(rand, mealPools.breakfast.length);
+      const lunch = pickIndex(rand, mealPools.lunch.length);
+      let dinner = pickIndex(rand, mealPools.dinner.length);
+      if (dinner === lunch) dinner = mod(dinner + 1 + pickIndex(rand, mealPools.dinner.length - 1), mealPools.dinner.length);
+      const draw = { breakfast, lunch, dinner, mode: "manual", updatedAt: new Date().toISOString() };
+      localStorage.setItem(drawKey(date), JSON.stringify(draw));
+      return draw;
+    }
+
+    function rerollMeal(date, type) {
+      const current = savedDraw(date) || defaultDraw(date);
+      const pool = mealPools[type];
+      if (!pool) return current;
+      const rand = seededRandom(hashString(`${isoDate(date)}|${type}|${Date.now()}|${Math.random()}`));
+      const currentIndex = mod(current[type], pool.length);
+      let nextIndex = pickIndex(rand, pool.length);
+      if (pool.length > 1 && nextIndex === currentIndex) {
+        nextIndex = mod(nextIndex + 1 + pickIndex(rand, pool.length - 1), pool.length);
+      }
+      const draw = {
+        ...current,
+        [type]: nextIndex,
+        mode: "manual",
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(drawKey(date), JSON.stringify(draw));
+      return draw;
+    }
+
+    function chooseMeal(date, meal) {
+      if (!meal || !mealPools[meal.type]) return savedDraw(date) || defaultDraw(date);
+      const index = mealPools[meal.type].findIndex((item) => item.id === meal.id);
+      if (index < 0) return savedDraw(date) || defaultDraw(date);
+      const draw = {
+        ...(savedDraw(date) || defaultDraw(date)),
+        [meal.type]: index,
+        mode: "manual",
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(drawKey(date), JSON.stringify(draw));
+      return draw;
+    }
+
+    function comboFromDraw(draw) {
+      const breakfast = mealPools.breakfast[mod(draw.breakfast, mealPools.breakfast.length)];
+      const lunch = mealPools.lunch[mod(draw.lunch, mealPools.lunch.length)];
+      const dinner = mealPools.dinner[mod(draw.dinner, mealPools.dinner.length)];
+      const meals = { breakfast, lunch, dinner };
+      const prep = mergePrep(meals);
+      const scenes = [...new Set([breakfast, lunch, dinner].flatMap((meal) => meal.scene))];
+      return {
+        name: `${breakfast.name} + ${lunch.name} + ${dinner.name}`,
+        meals,
+        prep,
+        scenes,
+        kcal: breakfast.kcal + lunch.kcal + dinner.kcal,
+        protein: breakfast.protein + lunch.protein + dinner.protein,
+        swap: [lunch.swap, dinner.swap].filter(Boolean).join("  "),
+        mode: draw.mode
+      };
+    }
+
+    function mergePrep(meals) {
+      const rows = [
+        ...meals.breakfast.prep.slice(0, 2),
+        ...meals.lunch.prep.slice(0, 4),
+        ...meals.dinner.prep.slice(0, 3)
+      ];
+      const seen = new Set();
+      const merged = [];
+      for (const [name, note] of rows) {
+        const key = name.replace(/\s+/g, "");
+        if (seen.has(key)) continue;
+        seen.add(key);
+        merged.push([name, note]);
+      }
+      return merged.slice(0, 8);
+    }
+
+    function planFor(date) {
+      const start = parseLocalDate(state.settings.cycleStart);
+      const diff = Math.floor((date - start) / DAY);
+      const draw = savedDraw(date) || defaultDraw(date);
+      return { plan: comboFromDraw(draw), draw, index: mod(diff, plans.length), cycleDay: diff + 1 };
+    }
+
+    function checkKey(type, date, index) {
+      return `nutritionPrep.${type}.${isoDate(date)}.${index}`;
+    }
+
+    function isChecked(type, date, index) {
+      return localStorage.getItem(checkKey(type, date, index)) === "1";
+    }
+
+    function setChecked(type, date, index, checked) {
+      const key = checkKey(type, date, index);
+      if (checked) localStorage.setItem(key, "1");
+      else localStorage.removeItem(key);
+    }
+
+    function selectedDate() {
+      return todayLocal();
+    }
+
+    function renderToday() {
+      const baseDate = selectedDate();
+      const { plan, index, cycleDay } = planFor(baseDate);
+      const doneCount = plan.prep.filter((_, i) => isChecked("prep", baseDate, i)).length;
+
+      els.dateLine.textContent = `${formatDate(baseDate)} · 今日三餐与备料`;
+      els.prepTitle.textContent = plan.mode === "manual" ? "已手动重抽" : "今日抽奖结果";
+      els.mealTitle.textContent = "今日三餐抽奖";
+      els.dayIndex.textContent = `${plan.mode === "manual" ? "手动" : "日期"} · D${cycleDay <= 0 ? index + 1 : cycleDay}`;
+      els.prepCount.textContent = `${doneCount}/${plan.prep.length}`;
+
+      els.prepList.innerHTML = plan.prep.map(([name, note], i) => {
+        const checked = isChecked("prep", baseDate, i);
+        return `
+          <article class="prep-item ${checked ? "done" : ""}">
+            <div class="prep-row">
+              <input class="check" type="checkbox" data-type="prep" data-index="${i}" ${checked ? "checked" : ""} aria-label="完成 ${name}">
+              <div>
+                <div class="item-name">${name}</div>
+                <div class="item-note">${note}</div>
+              </div>
+              <span class="tag green">备</span>
+            </div>
+          </article>`;
+      }).join("");
+
+      const mealEntries = [
+        [plan.meals.breakfast.label, plan.meals.breakfast, "yellow"],
+        [plan.meals.lunch.label, plan.meals.lunch, "green"],
+        [plan.meals.dinner.label, plan.meals.dinner, "red"]
+      ];
+      els.mealGrid.innerHTML = mealEntries.map(([label, meal, color]) => `
+        <article class="meal-card" tabindex="0" role="button" data-meal-type="${meal.type}" aria-label="查看 ${meal.name} 的完整做法">
+          <div class="subhead">${label}</div>
+          <div class="meal-name">${meal.name}</div>
+          <p class="meal-brief">${meal.brief}</p>
+          <div class="tag-row">
+            ${meal.scene.map((s, i) => `<span class="tag ${i % 2 ? "blue" : color}">${s}</span>`).join("")}
+            <span class="tag green">池 ${meal.sourceIndex + 1}</span>
+          </div>
+          <div class="meal-actions">
+            <span class="cook-hint">点击查看完整做法</span>
+            <button class="reroll-meal" data-reroll-type="${meal.type}" aria-label="只重抽${label}">只重抽${label}</button>
+          </div>
+        </article>
+      `).join("");
+
+      els.metrics.innerHTML = [
+        ["热量", `${plan.kcal} kcal`, "估算全天"],
+        ["蛋白质", `${plan.protein} g`, "估算全天"],
+        ["组合数", `${mealPools.breakfast.length * mealPools.lunch.length * mealPools.dinner.length}+`, "可继续扩展"]
+      ].map(([label, value, note]) => `
+        <div class="metric"><b>${value}</b><span>${label} · ${note}</span></div>
+      `).join("");
+      els.swapBox.textContent = plan.swap;
+    }
+
+    function normalizeSearchText(text) {
+      return String(text)
+        .toLowerCase()
+        .replace(/[，。；、：:,.!?！？（）()[\]\s]+/g, "");
+    }
+
+    function mealSearchText(meal) {
+      return normalizeSearchText([
+        meal.label,
+        meal.name,
+        meal.brief,
+        ...meal.scene
+      ].join(" "));
+    }
+
+    function mealMatchesQuery(meal, query) {
+      const parts = query
+        .split(/\s+/)
+        .map(normalizeSearchText)
+        .filter(Boolean);
+      if (!parts.length) return true;
+      const text = mealSearchText(meal);
+      return parts.every((part) => text.includes(part));
+    }
+
+    function renderLibrary() {
+      const query = state.search.trim();
+      const filtered = mealPoolList.filter((meal) => mealMatchesQuery(meal, query));
+      els.recipeCount.textContent = `${filtered.length}/${mealPoolList.length}`;
+      els.recipeList.innerHTML = filtered.map((meal) => `
+        <article class="recipe-item" tabindex="0" role="button" data-meal-id="${meal.id}" aria-label="查看 ${meal.name} 的完整做法">
+          <div class="subhead">${meal.label} · 池 ${meal.sourceIndex + 1}</div>
+          <div class="meal-name">${meal.name}</div>
+          <p class="recipe-meta">${meal.brief}</p>
+          <div class="tag-row">${meal.scene.map((s, n) => `<span class="tag ${n % 2 ? "blue" : "green"}">${s}</span>`).join("")}</div>
+          <p class="item-note">${meal.swap}</p>
+          <div class="library-actions">
+            <span class="cook-hint">点击查看完整做法</span>
+            <button class="choose-meal" data-choose-meal-id="${meal.id}" aria-label="设为今日${meal.label}">设为今日${meal.label}</button>
+          </div>
+        </article>
+      `).join("") || `<div class="recipe-item"><div class="meal-name">没有匹配项</div><p class="item-note">换一个食材或场景关键词。</p></div>`;
+    }
+
+    function renderShopping() {
+      const baseDate = selectedDate();
+      const { plan } = planFor(baseDate);
+      const items = mergeShopping(plan);
+      const doneCount = items.filter((_, i) => isChecked("shop", baseDate, i)).length;
+
+      els.shoppingTitle.textContent = `${plan.name} · ${formatDate(baseDate)}`;
+      els.shoppingCount.textContent = `${doneCount}/${items.length}`;
+      els.shoppingGrid.innerHTML = items.map((item, i) => {
+        const checked = isChecked("shop", baseDate, i);
+        return `
+          <article class="shop-item ${checked ? "done" : ""}">
+            <div class="shop-row">
+              <input class="check" type="checkbox" data-type="shop" data-index="${i}" ${checked ? "checked" : ""} aria-label="采购 ${item.name}">
+              <div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-note">${item.note}</div>
+              </div>
+              <span class="tag ${item.kind}">${item.label}</span>
+            </div>
+          </article>`;
+      }).join("");
+    }
+
+    function mergeShopping(plan) {
+      const base = plan.prep.map(([name, note]) => ({ name, note, label: "备", kind: "green" }));
+      return [
+        ...base,
+        { name: "无糖饮品", note: "白水、无糖茶、无糖豆浆或纯牛奶；跳过奶茶和含糖饮料", label: "饮", kind: "blue" },
+        { name: "备用蛋白", note: "原味鸡胸、鸡蛋、豆腐、鱼肉或牛肉任选一份，避免辣味加工品", label: "蛋", kind: "red" },
+        { name: "备用水果", note: "苹果、橙子、梨、草莓等 1-2 份；果汁不算", label: "果", kind: "" }
+      ];
+    }
+
+    function currentPlan() {
+      return planFor(selectedDate()).plan;
+    }
+
+    function currentMeal(type) {
+      return currentPlan().meals[type];
+    }
+
+    function mealById(id) {
+      return mealPoolList.find((meal) => meal.id === id);
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function mealStyle(meal) {
+      const text = `${meal.name} ${meal.brief}`;
+      if (/沙拉|轻食|冷拌|生菜/.test(text)) return "salad";
+      if (/卷|三明治|吐司|贝果|饭团/.test(text)) return "assemble";
+      if (/粥|燕麦|酸奶|早餐杯|麦片/.test(text)) return "quick";
+      if (/汤|锅|煲|米线|米粉|面/.test(text)) return "soup";
+      if (/蒸|蒸蛋|清蒸/.test(text)) return "steam";
+      return "stir";
+    }
+
+    function prepDirections(meal) {
+      const base = meal.prep?.length ? meal.prep : [[meal.name, meal.brief]];
+      return base.slice(0, 6).map(([name, note]) => {
+        const clean = note.replace(/；/g, "，");
+        if (/鸡胸|鸡肉|鸡腿|牛肉|瘦肉|鱼|鳕鱼|虾/.test(name)) {
+          return `${name}：按 ${clean} 准备；生肉/生鱼用单独案板，切成约 1 口大小，熟食则撕成条或切片。`;
+        }
+        if (/青菜|生菜|白菜|娃娃菜|菠菜|西兰花|豆苗|黄瓜|番茄|彩椒|胡萝卜|冬瓜|南瓜|土豆|红薯|紫薯|山药/.test(name)) {
+          return `${name}：按 ${clean} 准备；先冲洗，叶菜切 4-5cm 段，根茎类切 1.5-2cm 块，方便同时熟。`;
+        }
+        if (/米饭|糙米|杂粮|藜麦|面|米线|米粉|燕麦|吐司|卷饼|玉米/.test(name)) {
+          return `${name}：按 ${clean} 准备；这是主食部分，先备好，最后再和蛋白质、蔬菜组合。`;
+        }
+        return `${name}：${clean}`;
+      });
+    }
+
+    function cookingSteps(meal) {
+      const style = mealStyle(meal);
+      const protein = /鱼|虾|牛肉|鸡|瘦肉|豆腐|鸡蛋|金枪鱼/.test(meal.brief);
+      const steps = {
+        quick: [
+          "把需要加热的主食先处理好：玉米、红薯、紫薯、山药可蒸 15-25 分钟；燕麦可用热水或牛奶泡 5 分钟。",
+          "鸡蛋冷水下锅，水开后转中火煮 8-10 分钟；捞出过凉水更好剥壳。",
+          "酸奶、牛奶、豆浆、水果这类不用下锅的食材最后组合，水果洗净后切块即可。",
+          "如果是咸口燕麦/粥，先煮燕麦 4-6 分钟，再放熟鸡胸、青菜，最后放盐调味。"
+        ],
+        assemble: [
+          "先把生菜、黄瓜、番茄洗净沥干；黄瓜切条，番茄切片，叶菜撕成手掌大小。",
+          "蛋白质如果是即食鸡胸、卤牛肉、金枪鱼，直接切片或撕条；如果是生肉，先煎/煮到完全熟。",
+          "把全麦吐司、贝果、卷饼或饭团作为底，再铺蔬菜和蛋白质。",
+          "酱料只放半量，优先用无糖酸奶、少量低钠酱油、黑胡椒或油醋汁。"
+        ],
+        salad: [
+          "所有生食蔬菜先洗净沥干，黄瓜切片，番茄对半切，生菜撕片；不确定是否干净时用熟蔬菜替代。",
+          "肉类或鱼虾类先单独加热到全熟：鸡胸/牛肉切开无粉色，鱼肉变白易散，虾仁变红卷曲。",
+          "主食如红薯、玉米、藜麦饭、糙米饭提前蒸熟或微波加热。",
+          "把主食垫底，铺蔬菜和蛋白质，酱汁分装或半量加入，吃前再拌。"
+        ],
+        soup: [
+          "锅里加 500-700ml 水，先放番茄、冬瓜、白菜、土豆等耐煮食材，中火煮 6-10 分钟。",
+          "再放豆腐、熟米饭/米粉/面条等容易熟的食材，继续煮 3-5 分钟。",
+          protein ? "最后放肉片、鱼片、虾仁或鸡蛋：薄肉片煮到变色后再 1-2 分钟，鱼虾煮到完全变色，鸡蛋打散后绕圈倒入。" : "最后放绿叶菜，烫 30-60 秒即可。",
+          "关火前调味：少量盐或低钠酱油即可，不放辣椒油，不用浓汤宝。"
+        ],
+        steam: [
+          "蒸锅或电饭锅加水，先把红薯、南瓜、土豆等主食类放进去蒸 15-25 分钟。",
+          "蒸蛋比例用 1 个鸡蛋配约 1.5 倍温水，搅匀后过筛更嫩，盖盘子中火蒸 8-10 分钟。",
+          "鱼片、虾仁或鸡胸薄片铺在盘中，水开后蒸 6-10 分钟，厚块要延长到 12 分钟左右。",
+          "出锅后只加少量低钠酱油、葱花或黑胡椒；不放辣油。"
+        ],
+        stir: [
+          "先处理食材：肉类切薄片或小块，蔬菜切成大小接近的块，米饭或主食提前备好。",
+          "热锅后放 1 茶匙油，先下肉类，中火炒到表面变色；如果是鸡胸/牛肉，切开确认内部熟透。",
+          "加入耐熟蔬菜如胡萝卜、土豆、西兰花，翻炒 2-4 分钟；再加叶菜，翻炒 30-90 秒。",
+          "加 1-2 汤匙水帮助焖熟，最后用少量盐、低钠酱油、黑胡椒调味，关火后再和主食装盘。"
+        ]
+      };
+      return steps[style];
+    }
+
+    function seasoningTips(meal) {
+      const style = mealStyle(meal);
+      const tips = [
+        "基础调味：盐一小撮或低钠酱油 1 茶匙，黑胡椒少量；先少放，尝了再加。",
+        "少油原则：一餐烹调用油尽量 1 茶匙左右；外卖备注少油、酱汁另放。",
+        "默认不加辣椒油、红油、香菇、重口酱包。"
+      ];
+      if (style === "salad" || style === "assemble") tips.unshift("冷食/轻食调味：油醋汁、无糖酸奶或低脂酱用半量，吃前再拌。");
+      if (style === "soup") tips.unshift("汤类调味：靠番茄、青菜和蛋白质本身出味，不用浓汤宝。");
+      return tips;
+    }
+
+    function safetyTips(meal) {
+      const tips = [
+        "生肉、生鱼、生虾接触过的刀板要及时清洗，别再直接切熟食或水果。",
+        "肉类和鱼虾一定做到全熟；吃完若有皮肤、胃肠或呼吸道不适，记录这餐并暂停可疑食材。",
+        "第一次尝试虾、鱼、坚果、乳制品等不确定耐受食物时，别同一餐叠太多新食材。"
+      ];
+      if (/虾|鱼|坚果|牛奶|酸奶|奶酪/.test(meal.brief)) tips.unshift("这餐含可能不耐受食材；不确定时换成鸡胸、鸡蛋或豆腐。");
+      return tips;
+    }
+
+    function recipeForMeal(meal) {
+      return {
+        prep: prepDirections(meal),
+        steps: cookingSteps(meal),
+        seasoning: seasoningTips(meal),
+        safety: safetyTips(meal)
+      };
+    }
+
+    function renderList(items, ordered = false) {
+      const tag = ordered ? "ol" : "ul";
+      return `<${tag}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</${tag}>`;
+    }
+
+    function openMealRecipe(meal) {
+      if (!meal) return;
+      const recipe = recipeForMeal(meal);
+      els.modalMealType.textContent = meal.label;
+      els.modalTitle.textContent = meal.name;
+      els.modalSubtitle.textContent = meal.brief;
+      els.modalBody.innerHTML = `
+        <section class="recipe-section">
+          <h3>食材处理和切法</h3>
+          ${renderList(recipe.prep)}
+        </section>
+        <section class="recipe-section">
+          <h3>下锅顺序和时间</h3>
+          ${renderList(recipe.steps, true)}
+        </section>
+        <section class="recipe-section">
+          <h3>调味</h3>
+          ${renderList(recipe.seasoning)}
+        </section>
+        <section class="recipe-section">
+          <h3>安全和替代</h3>
+          ${renderList(recipe.safety)}
+          <p class="item-note">${escapeHtml(meal.swap)}</p>
+        </section>
+      `;
+      els.recipeModal.classList.add("open");
+      els.recipeModal.setAttribute("aria-hidden", "false");
+      document.getElementById("modalClose").focus();
+    }
+
+    function openRecipe(type) {
+      const meal = currentMeal(type);
+      openMealRecipe(meal);
+    }
+
+    function closeRecipe() {
+      els.recipeModal.classList.remove("open");
+      els.recipeModal.setAttribute("aria-hidden", "true");
+    }
+
+    function renderSettings() {
+      els.cycleStart.value = state.settings.cycleStart;
+      els.goalText.value = state.settings.goal;
+      els.avoidText.value = state.settings.avoid;
+      els.modeText.value = state.settings.mode;
+    }
+
+    function renderAll() {
+      renderToday();
+      renderLibrary();
+      renderShopping();
+      renderSettings();
+    }
+
+    function setActiveTab(tabName) {
+      state.activeTab = tabName;
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.tab === tabName));
+      });
+      document.querySelectorAll(".view").forEach((view) => {
+        view.classList.toggle("active", view.id === `view-${tabName}`);
+      });
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setActiveTab(tab.dataset.tab);
+      });
+    });
+
+    document.getElementById("randomizeMeals").addEventListener("click", () => {
+      randomDraw(selectedDate());
+      renderAll();
+    });
+
+    document.getElementById("resetChecks").addEventListener("click", () => {
+      const baseDate = selectedDate();
+      const datePrefix = isoDate(baseDate);
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith(`nutritionPrep.prep.${datePrefix}`) || key.startsWith(`nutritionPrep.shop.${datePrefix}`))
+        .forEach((key) => localStorage.removeItem(key));
+      renderAll();
+    });
+
+    document.body.addEventListener("change", (event) => {
+      if (!event.target.matches(".check")) return;
+      setChecked(event.target.dataset.type, selectedDate(), event.target.dataset.index, event.target.checked);
+      renderAll();
+    });
+
+    document.body.addEventListener("click", (event) => {
+      const rerollButton = event.target.closest(".reroll-meal");
+      if (rerollButton) {
+        event.stopPropagation();
+        rerollMeal(selectedDate(), rerollButton.dataset.rerollType);
+        renderAll();
+        return;
+      }
+      const chooseButton = event.target.closest(".choose-meal");
+      if (chooseButton) {
+        event.stopPropagation();
+        chooseMeal(selectedDate(), mealById(chooseButton.dataset.chooseMealId));
+        renderAll();
+        setActiveTab("today");
+        return;
+      }
+      const card = event.target.closest(".meal-card");
+      if (card) openRecipe(card.dataset.mealType);
+      const recipeCard = event.target.closest(".recipe-item[data-meal-id]");
+      if (recipeCard) openMealRecipe(mealById(recipeCard.dataset.mealId));
+    });
+
+    document.body.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeRecipe();
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches(".meal-card")) {
+        event.preventDefault();
+        openRecipe(event.target.dataset.mealType);
+      }
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches(".recipe-item[data-meal-id]")) {
+        event.preventDefault();
+        openMealRecipe(mealById(event.target.dataset.mealId));
+      }
+    });
+
+    document.getElementById("modalClose").addEventListener("click", closeRecipe);
+    els.recipeModal.addEventListener("click", (event) => {
+      if (event.target === els.recipeModal) closeRecipe();
+    });
+
+    els.searchBox.addEventListener("input", () => {
+      state.search = els.searchBox.value;
+      renderLibrary();
+    });
+
+    document.getElementById("clearSearch").addEventListener("click", () => {
+      state.search = "";
+      els.searchBox.value = "";
+      renderLibrary();
+    });
+
+    document.getElementById("saveSettings").addEventListener("click", () => {
+      state.settings = {
+        cycleStart: els.cycleStart.value || initialSettings.cycleStart,
+        goal: els.goalText.value.trim() || initialSettings.goal,
+        avoid: els.avoidText.value.trim() || initialSettings.avoid,
+        mode: els.modeText.value.trim() || initialSettings.mode
+      };
+      saveSettings();
+      renderAll();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
